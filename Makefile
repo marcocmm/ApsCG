@@ -1,10 +1,13 @@
 ############################# Makefile ##########################
 all:
-	gcc -c main.c casa.c -lGL -lglut -lGLU -Wall -ggdb
-	gcc -o main main.o casa.o -lGL -lglut -lGLU -Wall -ggdb
-	
+	gcc -c obj.c -lGL -lglut -lGLU -Wall -ansi -ggdb
+	gcc -o main obj.o -lGL -lglut -lGLU -Wall -ansi -ggdb
+
 clean:
 	rm -rf *.o
+
+run:
+	./main
 
 clean-all: clean
 	rm -rf main
