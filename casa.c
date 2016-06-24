@@ -44,29 +44,29 @@ void resetModel(Object *object) {
 
 int createObject(Object *object) {
     if (object->quantidadeVertices) {
-        object->vertices = (struct vertice *)
-                malloc(sizeof (struct vertice) * object->quantidadeVertices);
+        object->vertices = (Vertice *)
+                malloc(sizeof (Vertice) * object->quantidadeVertices);
         if (!object->vertices)
             return 0;
     }
 
     if (object->quantidadeTexturas) {
-        object->texCoords = (struct textura *)
-                malloc(sizeof (struct textura) * object->quantidadeTexturas);
+        object->texCoords = (Textura *)
+                malloc(sizeof (Textura) * object->quantidadeTexturas);
         if (!object->texCoords)
             return 0;
     }
 
     if (object->quantidadeNormais) {
-        object->normais = (struct normal *)
-                malloc(sizeof (struct normal) * object->quantidadeNormais);
+        object->normais = (Normal *)
+                malloc(sizeof (Normal) * object->quantidadeNormais);
         if (!object->normais)
             return 0;
     }
 
     if (object->quantidadeFaces) {
-        object->faces = (struct face *)
-                calloc(object->quantidadeFaces, sizeof (struct face));
+        object->faces = (Face *)
+                calloc(object->quantidadeFaces, sizeof (Face));
         if (!object->faces)
             return 0;
     }
@@ -79,20 +79,16 @@ int initializeObject(FILE *file, Object *object) {
     char buf[256];
 
     while (!feof(file)) {
-        /* Read whole line */
         fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
             {
                 if (buf[1] == ' ') {
-                    /* Vertex */
                     object->quantidadeVertices++;
                 } else if (buf[1] == 't') {
-                    /* Texture coords. */
                     object->quantidadeTexturas++;
                 } else if (buf[1] == 'n') {
-                    /* Normal vector */
                     object->quantidadeNormais++;
                 } else {
                     printf("Warning: unknown token \"%s\"! (ignoring)\n", buf);
@@ -103,7 +99,6 @@ int initializeObject(FILE *file, Object *object) {
 
             case 'f':
             {
-                /* Face */
                 if (sscanf(buf + 2, "%d/%d/%d", &v, &n, &t) == 3) {
                     object->quantidadeFaces++;
                     object->possuiTextura = 1;
@@ -121,7 +116,6 @@ int initializeObject(FILE *file, Object *object) {
                     object->possuiTextura = 0;
                     object->possuiNormais = 0;
                 } else {
-                    /* Should never be there or the model is very crappy */
                     fprintf(stderr, "Error: found face with no vertex!\n");
                 }
 
@@ -130,8 +124,7 @@ int initializeObject(FILE *file, Object *object) {
 
             case 'g':
             {
-                /* Group */
-                /*	fscanf (fp, "%s", buf); */
+                fscanf(file, "%s", buf);
                 break;
             }
 
@@ -163,22 +156,20 @@ int initializeObject(FILE *file, Object *object) {
 }
 
 int populateObject(FILE *file, Object *object) {
-    struct vertice *pvert = object->vertices;
-    struct textura *puvw = object->texCoords;
-    struct normal *pnorm = object->normais;
-    struct face *pface = object->faces;
+    Vertice *pvert = object->vertices;
+    Textura *puvw = object->texCoords;
+    Normal *pnorm = object->normais;
+    Face *pface = object->faces;
     char buf[128], *pbuf;
     int i;
 
     while (!feof(file)) {
-        /* Read whole line */
         fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
             {
                 if (buf[1] == ' ') {
-                    /* Vertex */
                     if (sscanf(buf + 2, "%f %f %f %f",
                             &pvert->xyzw[0], &pvert->xyzw[1],
                             &pvert->xyzw[2], &pvert->xyzw[3]) != 4) {
@@ -193,7 +184,6 @@ int populateObject(FILE *file, Object *object) {
 
                     pvert++;
                 } else if (buf[1] == 't') {
-                    /* Texture coords. */
                     if (sscanf(buf + 2, "%f %f %f", &puvw->uvw[0],
                             &puvw->uvw[1], &puvw->uvw[2]) != 3) {
                         if (sscanf(buf + 2, "%f %f", &puvw->uvw[0],
@@ -212,7 +202,6 @@ int populateObject(FILE *file, Object *object) {
 
                     puvw++;
                 } else if (buf[1] == 'n') {
-                    /* Normal vector */
                     if (sscanf(buf + 2, "%f %f %f", &pnorm->ijk[0],
                             &pnorm->ijk[1], &pnorm->ijk[2]) != 3) {
                         fprintf(stderr, "Error reading normal vectors!\n");
@@ -230,7 +219,6 @@ int populateObject(FILE *file, Object *object) {
                 pbuf = buf;
                 pface->quantidadeVertices = 0;
 
-                /* Count number of vertices for this face */
                 while (*pbuf) {
                     if (*pbuf == ' ')
                         pface->quantidadeVertices++;
@@ -238,7 +226,6 @@ int populateObject(FILE *file, Object *object) {
                     pbuf++;
                 }
 
-                /* Select primitive type */
                 if (pface->quantidadeVertices < 3) {
                     fprintf(stderr, "Error: a face must have at least 3 vertices!\n");
                     return 0;
@@ -250,7 +237,6 @@ int populateObject(FILE *file, Object *object) {
                     pface->tipo = GL_POLYGON;
                 }
 
-                /* Memory allocation for vertices */
                 pface->vertices = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
                 if (object->possuiTextura)
@@ -259,15 +245,13 @@ int populateObject(FILE *file, Object *object) {
                 if (object->possuiNormais)
                     pface->normais = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
-                /* Read face data */
                 pbuf = buf;
                 i = 0;
 
                 for (i = 0; i < pface->quantidadeVertices; ++i) {
                     pbuf = strchr(pbuf, ' ');
-                    pbuf++; /* Skip space */
+                    pbuf++;
 
-                    /* Try reading vertices */
                     if (sscanf(pbuf, "%d/%d/%d",
                             &pface->vertices[i],
                             &pface->texturas[i],
@@ -281,7 +265,6 @@ int populateObject(FILE *file, Object *object) {
                         }
                     }
 
-                    /* Indices must start at 0 */
                     pface->vertices[i]--;
 
                     if (object->possuiTextura)
@@ -370,7 +353,7 @@ void drawFloor() {
     glPopMatrix();
 }
 
-void init(const char *filename) {
+void init() {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glShadeModel(GL_SMOOTH);
@@ -380,9 +363,6 @@ void init(const char *filename) {
     glEnable(GL_LIGHT0);
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
-    if (!parseObjectFile(filename, &object))
-        exit(EXIT_FAILURE);
 }
 
 void resetScene() {
@@ -458,7 +438,10 @@ int main(int argc, char **argv) {
     cameraZ = 10;
 
     atexit(resetScene);
-    init("casa.obj");
+    init();
+    if (!parseObjectFile("casa.obj", &object)) {
+        exit(EXIT_FAILURE);
+    }
 
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
