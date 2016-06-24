@@ -13,6 +13,8 @@ void rotateAllElements() {
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
+    glScalef(0.05, 0.05, 0.05);
+    glTranslatef(80, 1, 0);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
     drawObject(balanco);
     glPopMatrix();
@@ -23,10 +25,10 @@ void drawFloor() {
     rotateAllElements();
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
-    glVertex3f(-200, 0, 200);
-    glVertex3f(200, 0, 200);
-    glVertex3f(200, 0, -200);
-    glVertex3f(-200, 0, -200);
+    glVertex3f(-50, 0, 50);
+    glVertex3f(50, 0, 50);
+    glVertex3f(50, 0, -50);
+    glVertex3f(-50, 0, -50);
     glEnd();
     glPopMatrix();
 }
@@ -34,8 +36,8 @@ void drawFloor() {
 void drawHouse() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(20, 20, 20);
-    glTranslatef(0, 1, 0);
+    glScalef(5, 5, 5);
+    glTranslatef(0, 0, 0);
     drawObject(casa);
     glPopMatrix();
 }
@@ -43,8 +45,8 @@ void drawHouse() {
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(0.07, 0.07, 0.07);
-    glTranslatef(100, 130, 0);
+    glScalef(0.03, 0.03, 0.03);
+    glTranslatef(100, 200, 0);
     drawObject(carro);
     glPopMatrix();
 }
@@ -130,9 +132,9 @@ void display() {
             0, 1, 0);
 
     drawHouse();
-    drawSwing();
-    drawFloor();
-    drawCar();
+        drawSwing();
+        drawFloor();
+        drawCar();
 
     glFlush();
     glutSwapBuffers();
@@ -174,14 +176,14 @@ void keyboard(int key, int x, int y) {
             rotate -= 1;
             break;
         case GLUT_KEY_UP:
-            cameraX += 1;
-            cameraY += 1;
-            cameraZ += 1;
-            break;
-        case GLUT_KEY_DOWN:
             cameraX -= 1;
             cameraY -= 1;
             cameraZ -= 1;
+            break;
+        case GLUT_KEY_DOWN:
+            cameraX += 1;
+            cameraY += 1;
+            cameraZ += 1;
             break;
         case GLUT_KEY_HOME:
             cameraX = 10;
