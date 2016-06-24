@@ -13,6 +13,8 @@ void rotateAllElements() {
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
+    glScalef(0.05,0.05,0.05);
+    glTranslatef(80,1,0);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
     drawObject(balanco);
     glPopMatrix();
@@ -162,14 +164,14 @@ void keyboard(int key, int x, int y) {
             rotate -= 1;
             break;
         case GLUT_KEY_UP:
-            cameraX += 0.2;
-            cameraY += 0.2;
-            cameraZ += 0.2;
-            break;
-        case GLUT_KEY_DOWN:
             cameraX -= 0.2;
             cameraY -= 0.2;
             cameraZ -= 0.2;
+            break;
+        case GLUT_KEY_DOWN:
+            cameraX += 0.2;
+            cameraY += 0.2;
+            cameraZ += 0.2;
             break;
         case GLUT_KEY_HOME:
             cameraX = 10;
@@ -211,6 +213,7 @@ int main(int argc, char **argv) {
     init();
 
     casa = parseObjectFile("objetos/bg4_obj.obj");
+//    casa = parseObjectFile("objetos/house.obj");
     balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
 
     glutReshapeFunc(reshapeSwing);
