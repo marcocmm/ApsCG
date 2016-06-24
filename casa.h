@@ -4,9 +4,8 @@ typedef struct vertice Vertice;
 typedef struct textura Textura;
 typedef struct normal Normal;
 typedef struct face Face;
-typedef struct object Object;
+typedef struct casa Object;
 
-Object object;
 GLdouble cameraX, cameraY, cameraZ;
 
 typedef float vec3_t[3];
@@ -43,7 +42,7 @@ struct face {
     int *normais;
 };
 
-struct object {
+struct casa {
     int quantidadeVertices;
     int quantidadeTexturas;
     int quantidadeNormais;
@@ -57,3 +56,5 @@ struct object {
     Normal *normais;
     Face *faces;
 };
+
+Object object;

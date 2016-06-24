@@ -140,7 +140,6 @@ int initializeObject(FILE *file, Object *object) {
         }
     }
 
-    /* Check if informations are valid */
     if ((object->possuiTextura && !object->quantidadeTexturas) ||
             (object->possuiNormais && !object->quantidadeNormais)) {
         fprintf(stderr, "error: contradiction between collected info!\n");
@@ -316,10 +315,8 @@ int parseObjectFile(const char *filename, Object *object) {
         return 0;
     }
 
-    /* reset model data */
-    memset(object, 0, sizeof (struct object));
+    memset(object, 0, sizeof (Object));
 
-    /* first pass: read model info */
     if (!initializeObject(file, object)) {
         fclose(file);
         return 0;
@@ -327,14 +324,12 @@ int parseObjectFile(const char *filename, Object *object) {
 
     rewind(file);
 
-    /* memory allocation */
     if (!createObject(object)) {
         fclose(file);
         resetModel(object);
         return 0;
     }
 
-    /* second pass: read model data */
     if (!populateObject(file, object)) {
         fclose(file);
         resetModel(object);
@@ -377,7 +372,6 @@ void drawFloor() {
 
 void init(const char *filename) {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
-    /* Initialize OpenGL context */
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glShadeModel(GL_SMOOTH);
 
@@ -387,7 +381,6 @@ void init(const char *filename) {
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
-    /* Load OBJ model file */
     if (!parseObjectFile(filename, &object))
         exit(EXIT_FAILURE);
 }
@@ -420,10 +413,9 @@ void display() {
             0, 0, 0,
             0, 1, 0);
 
-    /* Draw the model */
     drawObject(&object);
     drawFloor();
-    glFlush(); //aaaa
+    glFlush();
     glutSwapBuffers();
 }
 
