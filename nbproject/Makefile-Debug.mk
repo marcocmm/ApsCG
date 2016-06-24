@@ -34,9 +34,7 @@ include Makefile
 OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
-OBJECTFILES= \
-	${OBJECTDIR}/casa.o \
-	${OBJECTDIR}/object.o
+OBJECTFILES=
 
 
 # C Compiler Flags
@@ -63,15 +61,15 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/apscg: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/apscg ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/casa.o: casa.c 
+${OBJECTDIR}/casa.c.gch: casa.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/casa.o casa.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o "$@" casa.c
 
-${OBJECTDIR}/object.o: object.c 
+${OBJECTDIR}/object.c.gch: object.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/object.o object.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o "$@" object.c
 
 # Subprojects
 .build-subprojects:
