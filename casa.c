@@ -14,9 +14,9 @@ void resetModel(Object *object) {
             object->vertices = NULL;
         }
 
-        if (object->texCoords) {
-            free(object->texCoords);
-            object->texCoords = NULL;
+        if (object->texturas) {
+            free(object->texturas);
+            object->texturas = NULL;
         }
 
         if (object->normais) {
@@ -42,31 +42,50 @@ void resetModel(Object *object) {
     }
 }
 
-int createObject(Object *object) {
+Object* createObject() {
+    Object* object = (Object*) malloc(sizeof (Object));
+
+    object->possuiNormais = 0;
+    object->possuiTextura = 0;
+    object->quantidadeFaces = 0;
+    object->quantidadeNormais = 0;
+    object->quantidadeTexturas = 0;
+    object->quantidadeVertices = 0;
+
+    object->faces = NULL;
+    object->normais = NULL;
+    object->texturas = NULL;
+    object->vertices = NULL;
+
+    memset(object, 0, sizeof (Object));
+    return object;
+}
+
+int alocateMemmory(Object *object) {
     if (object->quantidadeVertices) {
-        object->vertices = (struct vertice *)
-                malloc(sizeof (struct vertice) * object->quantidadeVertices);
+        object->vertices = (Vertice *)
+                malloc(sizeof (Vertice) * object->quantidadeVertices);
         if (!object->vertices)
             return 0;
     }
 
     if (object->quantidadeTexturas) {
-        object->texCoords = (struct textura *)
-                malloc(sizeof (struct textura) * object->quantidadeTexturas);
-        if (!object->texCoords)
+        object->texturas = (Textura *)
+                malloc(sizeof (Textura) * object->quantidadeTexturas);
+        if (!object->texturas)
             return 0;
     }
 
     if (object->quantidadeNormais) {
-        object->normais = (struct normal *)
-                malloc(sizeof (struct normal) * object->quantidadeNormais);
+        object->normais = (Normal *)
+                malloc(sizeof (Normal) * object->quantidadeNormais);
         if (!object->normais)
             return 0;
     }
 
     if (object->quantidadeFaces) {
-        object->faces = (struct face *)
-                calloc(object->quantidadeFaces, sizeof (struct face));
+        object->faces = (Face *)
+                calloc(object->quantidadeFaces, sizeof (Face));
         if (!object->faces)
             return 0;
     }
@@ -74,25 +93,21 @@ int createObject(Object *object) {
     return 1;
 }
 
-int initializeObject(FILE *file, Object *object) {
+int countAttributes(FILE *file, Object *object) {
     int v, t, n;
     char buf[256];
 
     while (!feof(file)) {
-        /* Read whole line */
         fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
             {
                 if (buf[1] == ' ') {
-                    /* Vertex */
                     object->quantidadeVertices++;
                 } else if (buf[1] == 't') {
-                    /* Texture coords. */
                     object->quantidadeTexturas++;
                 } else if (buf[1] == 'n') {
-                    /* Normal vector */
                     object->quantidadeNormais++;
                 } else {
                     printf("Warning: unknown token \"%s\"! (ignoring)\n", buf);
@@ -103,7 +118,6 @@ int initializeObject(FILE *file, Object *object) {
 
             case 'f':
             {
-                /* Face */
                 if (sscanf(buf + 2, "%d/%d/%d", &v, &n, &t) == 3) {
                     object->quantidadeFaces++;
                     object->possuiTextura = 1;
@@ -121,7 +135,6 @@ int initializeObject(FILE *file, Object *object) {
                     object->possuiTextura = 0;
                     object->possuiNormais = 0;
                 } else {
-                    /* Should never be there or the model is very crappy */
                     fprintf(stderr, "Error: found face with no vertex!\n");
                 }
 
@@ -130,8 +143,7 @@ int initializeObject(FILE *file, Object *object) {
 
             case 'g':
             {
-                /* Group */
-                /*	fscanf (fp, "%s", buf); */
+                fscanf(file, "%s", buf);
                 break;
             }
 
@@ -163,22 +175,20 @@ int initializeObject(FILE *file, Object *object) {
 }
 
 int populateObject(FILE *file, Object *object) {
-    struct vertice *pvert = object->vertices;
-    struct textura *puvw = object->texCoords;
-    struct normal *pnorm = object->normais;
-    struct face *pface = object->faces;
+    Vertice *pvert = object->vertices;
+    Textura *puvw = object->texturas;
+    Normal *pnorm = object->normais;
+    Face *pface = object->faces;
     char buf[128], *pbuf;
     int i;
 
     while (!feof(file)) {
-        /* Read whole line */
         fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
             {
                 if (buf[1] == ' ') {
-                    /* Vertex */
                     if (sscanf(buf + 2, "%f %f %f %f",
                             &pvert->xyzw[0], &pvert->xyzw[1],
                             &pvert->xyzw[2], &pvert->xyzw[3]) != 4) {
@@ -193,7 +203,6 @@ int populateObject(FILE *file, Object *object) {
 
                     pvert++;
                 } else if (buf[1] == 't') {
-                    /* Texture coords. */
                     if (sscanf(buf + 2, "%f %f %f", &puvw->uvw[0],
                             &puvw->uvw[1], &puvw->uvw[2]) != 3) {
                         if (sscanf(buf + 2, "%f %f", &puvw->uvw[0],
@@ -212,7 +221,6 @@ int populateObject(FILE *file, Object *object) {
 
                     puvw++;
                 } else if (buf[1] == 'n') {
-                    /* Normal vector */
                     if (sscanf(buf + 2, "%f %f %f", &pnorm->ijk[0],
                             &pnorm->ijk[1], &pnorm->ijk[2]) != 3) {
                         fprintf(stderr, "Error reading normal vectors!\n");
@@ -230,7 +238,6 @@ int populateObject(FILE *file, Object *object) {
                 pbuf = buf;
                 pface->quantidadeVertices = 0;
 
-                /* Count number of vertices for this face */
                 while (*pbuf) {
                     if (*pbuf == ' ')
                         pface->quantidadeVertices++;
@@ -238,7 +245,6 @@ int populateObject(FILE *file, Object *object) {
                     pbuf++;
                 }
 
-                /* Select primitive type */
                 if (pface->quantidadeVertices < 3) {
                     fprintf(stderr, "Error: a face must have at least 3 vertices!\n");
                     return 0;
@@ -250,7 +256,6 @@ int populateObject(FILE *file, Object *object) {
                     pface->tipo = GL_POLYGON;
                 }
 
-                /* Memory allocation for vertices */
                 pface->vertices = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
                 if (object->possuiTextura)
@@ -259,15 +264,13 @@ int populateObject(FILE *file, Object *object) {
                 if (object->possuiNormais)
                     pface->normais = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
-                /* Read face data */
                 pbuf = buf;
                 i = 0;
 
                 for (i = 0; i < pface->quantidadeVertices; ++i) {
                     pbuf = strchr(pbuf, ' ');
-                    pbuf++; /* Skip space */
+                    pbuf++;
 
-                    /* Try reading vertices */
                     if (sscanf(pbuf, "%d/%d/%d",
                             &pface->vertices[i],
                             &pface->texturas[i],
@@ -281,7 +284,6 @@ int populateObject(FILE *file, Object *object) {
                         }
                     }
 
-                    /* Indices must start at 0 */
                     pface->vertices[i]--;
 
                     if (object->possuiTextura)
@@ -299,14 +301,14 @@ int populateObject(FILE *file, Object *object) {
 
     printf("second pass results: read\n");
     printf("   * %li vertices\n", pvert - object->vertices);
-    printf("   * %li texture coords.\n", puvw - object->texCoords);
+    printf("   * %li texture coords.\n", puvw - object->texturas);
     printf("   * %li normal vectors\n", pnorm - object->normais);
     printf("   * %li faces\n", pface - object->faces);
 
     return 1;
 }
 
-int parseObjectFile(const char *filename, Object *object) {
+Object* parseObjectFile(const char *filename) {
     FILE *file;
 
     file = fopen(filename, "r");
@@ -315,16 +317,16 @@ int parseObjectFile(const char *filename, Object *object) {
         return 0;
     }
 
-    memset(object, 0, sizeof (Object));
+    Object* object = createObject();
 
-    if (!initializeObject(file, object)) {
+    if (!countAttributes(file, object)) {
         fclose(file);
         return 0;
     }
 
     rewind(file);
 
-    if (!createObject(object)) {
+    if (!alocateMemmory(object)) {
         fclose(file);
         resetModel(object);
         return 0;
@@ -337,7 +339,11 @@ int parseObjectFile(const char *filename, Object *object) {
     }
 
     fclose(file);
-    return 1;
+    return object;
+}
+
+void rotacionaBalanco() {
+    glRotatef(45, 0.0f, 0.0f, 1.0f);
 }
 
 void drawObject(Object *object) {
@@ -347,19 +353,29 @@ void drawObject(Object *object) {
         glBegin(object->faces[i].tipo);
         for (j = 0; j < object->faces[i].quantidadeVertices; ++j) {
             if (object->possuiTextura)
-                glTexCoord3fv(object->texCoords[object->faces[i].texturas[j]].uvw);
+                glTexCoord3fv(object->texturas[object->faces[i].texturas[j]].uvw);
 
             if (object->possuiNormais)
                 glNormal3fv(object->normais[object->faces[i].normais[j]].ijk);
 
             glVertex4fv(object->vertices [object->faces[i].vertices[j]].xyzw);
         }
+        glRotatef(90, 0.0f, 0.0f, 1.0f);
         glEnd();
     }
+    //    rotacionaBalanco();
+}
+
+void drawBalanco(Object *object) {
+    //    glPushMatrix();
+        drawObject(object);
+    //    glRotatef(90, 0.0f, 1.0f, 0.0f);
+    //    glPopMatrix();
 }
 
 void drawFloor() {
     glPushMatrix();
+    //    rotacionaBalanco();
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
     glVertex3f(-20, -0.5, 20);
@@ -370,9 +386,32 @@ void drawFloor() {
     glPopMatrix();
 }
 
-void init(const char *filename) {
+void lighting() {
+    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, black);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+
+    //ativando luz ambiente global
+    float global_ambient[4] = {0.9f, 0.9f, 0.9f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+
+    //ativa a iluminação
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+}
+
+void init() {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
+
+
+    //    glEnable(GL_COLOR_MATERIAL);
+
     glShadeModel(GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
@@ -380,13 +419,11 @@ void init(const char *filename) {
     glEnable(GL_LIGHT0);
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
-    if (!parseObjectFile(filename, &object))
-        exit(EXIT_FAILURE);
+    //    lighting();
 }
 
 void resetScene() {
-    resetModel(&object);
+    resetModel(casa);
 }
 
 void reshape(int w, int h) {
@@ -421,17 +458,19 @@ void reshapeSwing(int w, int h) {
     glutPostRedisplay();
 }
 
-
-
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    glRotatef(cameraX, cameraX, cameraY, cameraZ);
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
 
-    drawObject(&object);
+    glScalef(zoom, zoom, 1.0f);
+
+    //    drawObject(casa);
+    drawBalanco(casa);
     drawFloor();
     glFlush();
     glutSwapBuffers();
@@ -459,6 +498,9 @@ void keyboard(int key, int x, int y) {
         case GLUT_KEY_END:
             cameraZ -= 0.2;
             break;
+        case GLUT_DOWN:
+            cameraZ -= 0.2;
+            break;
         case 27:
             exit(0);
     }
@@ -476,14 +518,23 @@ int main(int argc, char **argv) {
     cameraZ = 10;
 
     atexit(resetScene);
-//    init("casa.obj");
-    init("./objetos/chair_swing/swingcushion.obj");
+    //    init("./objetos/chair_swing/swingcushion.obj");
+    init();
+
+    //    casa = parseObjectFile("casa.obj");
+    casa = parseObjectFile("./objetos/chair_swing/swingcushion.obj");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
+    //    glutMouseFunc(mouse);
+    //    glutMouseWheelFunc(MouseWheel);
 
     glutMainLoop();
-
+    /*
+     * atenuação radial
+     * duas fontes de luz, ambiente e acima do solo
+     * 
+     */
     return 0;
 }

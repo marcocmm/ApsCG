@@ -8,6 +8,10 @@ typedef struct casa Object;
 
 GLdouble cameraX, cameraY, cameraZ;
 
+double rotate_y=45; 
+double rotate_x=45;
+double zoom=0.5;
+
 typedef float vec3_t[3];
 typedef float vec4_t[4];
 
@@ -52,9 +56,9 @@ struct casa {
     int possuiNormais;
 
     Vertice *vertices;
-    Textura *texCoords;
+    Textura *texturas;
     Normal *normais;
     Face *faces;
 };
 
-Object object;
+Object* casa;
