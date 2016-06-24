@@ -458,7 +458,8 @@ int main(int argc, char **argv) {
     cameraZ = 10;
 
     atexit(resetScene);
-    init("casa.obj");
+//    init("casa.obj");
+    init("./objetos/chair_swing/swingcushion.obj");
 
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
