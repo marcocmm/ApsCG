@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
     atexit(resetScene);
     init();
 
-    casa = parseObjectFile("objetos/casa.obj");
+    casa = parseObjectFile("objetos/bg4_obj.obj");
     balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
 
     glutReshapeFunc(reshapeSwing);
