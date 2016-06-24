@@ -23,17 +23,30 @@ void drawFloor() {
     rotateAllElements();
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
-    glVertex3f(-20, -0.5, 20);
-    glVertex3f(20, -0.5, 20);
-    glVertex3f(20, -0.5, -20);
-    glVertex3f(-20, -0.5, -20);
+    glVertex3f(-200, 0, 200);
+    glVertex3f(200, 0, 200);
+    glVertex3f(200, 0, -200);
+    glVertex3f(-200, 0, -200);
     glEnd();
     glPopMatrix();
 }
 
 void drawHouse() {
+    glPushMatrix();
     rotateAllElements();
+    glScalef(20, 20, 20);
+    glTranslatef(0, 1, 0);
     drawObject(casa);
+    glPopMatrix();
+}
+
+void drawCar() {
+    glPushMatrix();
+    rotateAllElements();
+    glScalef(0.07, 0.07, 0.07);
+    glTranslatef(100, 130, 0);
+    drawObject(carro);
+    glPopMatrix();
 }
 
 void lighting() {
@@ -58,8 +71,6 @@ void lighting() {
 void init() {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
-
-    //    glEnable(GL_COLOR_MATERIAL);
 
     glEnable(GL_COLOR_MATERIAL);
 
@@ -121,6 +132,7 @@ void display() {
     drawHouse();
     drawSwing();
     drawFloor();
+    drawCar();
 
     glFlush();
     glutSwapBuffers();
@@ -142,16 +154,16 @@ void keyboard(int key, int x, int y) {
         cameraZ = 5;
         return;
     }
-    if (cameraX > 20) {
-        cameraX = 20;
+    if (cameraX > 100) {
+        cameraX = 100;
         return;
     }
-    if (cameraY > 20) {
-        cameraY = 20;
+    if (cameraY > 100) {
+        cameraY = 100;
         return;
     }
-    if (cameraZ > 20) {
-        cameraZ = 20;
+    if (cameraZ > 100) {
+        cameraZ = 100;
         return;
     }
     switch (key) {
@@ -162,14 +174,14 @@ void keyboard(int key, int x, int y) {
             rotate -= 1;
             break;
         case GLUT_KEY_UP:
-            cameraX += 0.2;
-            cameraY += 0.2;
-            cameraZ += 0.2;
+            cameraX += 1;
+            cameraY += 1;
+            cameraZ += 1;
             break;
         case GLUT_KEY_DOWN:
-            cameraX -= 0.2;
-            cameraY -= 0.2;
-            cameraZ -= 0.2;
+            cameraX -= 1;
+            cameraY -= 1;
+            cameraZ -= 1;
             break;
         case GLUT_KEY_HOME:
             cameraX = 10;
@@ -182,13 +194,13 @@ void keyboard(int key, int x, int y) {
             cameraZ = 30;
             break;
         case GLUT_KEY_F1:
-            cameraY -= 0.2;
+            cameraY -= 1;
             break;
         case GLUT_KEY_F2:
-            cameraY += 0.2;
+            cameraY += 1;
             break;
         case GLUT_DOWN:
-            cameraZ -= 0.2;
+            cameraZ -= 1;
             break;
         case 27:
             exit(0);
@@ -202,9 +214,9 @@ int main(int argc, char **argv) {
     glutInitWindowSize(1280, 720);
     glutCreateWindow("Casa Numero 0");
 
-    cameraX = 10;
-    cameraY = 10;
-    cameraZ = 10;
+    cameraX = 50;
+    cameraY = 50;
+    cameraZ = 50;
     rotate = 0;
 
     atexit(resetScene);
@@ -212,12 +224,11 @@ int main(int argc, char **argv) {
 
     casa = parseObjectFile("objetos/casa.obj");
     balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
+    carro = parseObjectFile("objetos/Bugatti-Veyron.obj");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
-    //    glutMouseFunc(mouse);
-    //    glutMouseWheelFunc(MouseWheel);
 
     glutMainLoop();
     /*

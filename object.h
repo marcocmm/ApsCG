@@ -6,6 +6,8 @@ typedef struct normal Normal;
 typedef struct face Face;
 typedef struct object Object;
 
+typedef _Bool boolean;
+
 struct vertice {
     GLfloat xyzw[4];
     GLfloat x;
@@ -43,8 +45,8 @@ struct object {
     int quantidadeNormais;
     int quantidadeFaces;
 
-    int possuiTextura;
-    int possuiNormais;
+    boolean possuiTextura;
+    boolean possuiNormais;
 
     Vertice *vertices;
     Textura *texturas;
