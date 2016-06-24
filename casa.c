@@ -10,6 +10,14 @@ void rotateAllElements() {
     glRotatef(rotate, 0, 1, 0);
 }
 
+void drawSwing() {
+    glPushMatrix();
+    rotateAllElements();
+    //    glRotatef(45, 1.0f, 0.0f, 0.0f);
+    drawObject(balanco);
+    glPopMatrix();
+}
+
 void drawFloor() {
     glPushMatrix();
     rotateAllElements();
@@ -51,6 +59,7 @@ void init() {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
 
+    //    glEnable(GL_COLOR_MATERIAL);
 
     glEnable(GL_COLOR_MATERIAL);
 
@@ -85,6 +94,22 @@ void reshape(int w, int h) {
     glutPostRedisplay();
 }
 
+void reshapeSwing(int w, int h) {
+    if (h == 0)
+        h = 1;
+
+    glViewport(0, 10, (GLsizei) w, (GLsizei) h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.0, w / (GLdouble) h, 0.1, 1000.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glutPostRedisplay();
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -94,7 +119,9 @@ void display() {
             0, 1, 0);
 
     drawHouse();
+    drawSwing();
     drawFloor();
+
     glFlush();
     glutSwapBuffers();
 }
@@ -160,6 +187,9 @@ void keyboard(int key, int x, int y) {
         case GLUT_KEY_F2:
             cameraY += 0.2;
             break;
+        case GLUT_DOWN:
+            cameraZ -= 0.2;
+            break;
         case 27:
             exit(0);
     }
@@ -179,11 +209,15 @@ int main(int argc, char **argv) {
 
     atexit(resetScene);
     init();
-    casa = parseObjectFile("casa.obj");
 
-    glutReshapeFunc(reshape);
+    casa = parseObjectFile("objetos/casa.obj");
+    balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
+
+    glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
+    //    glutMouseFunc(mouse);
+    //    glutMouseWheelFunc(MouseWheel);
 
     glutMainLoop();
     /*
