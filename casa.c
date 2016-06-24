@@ -344,7 +344,7 @@ Object* parseObjectFile(const char *filename) {
 
 void drawObject(Object *object) {
     int i, j;
-
+    glRotatef(rotate, 0, 1, 0);
     for (i = 0; i < object->quantidadeFaces; ++i) {
         glBegin(object->faces[i].tipo);
         for (j = 0; j < object->faces[i].quantidadeVertices; ++j) {
@@ -362,6 +362,7 @@ void drawObject(Object *object) {
 
 void drawFloor() {
     glPushMatrix();
+    glRotatef(rotate, 0, 1, 0);
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
     glVertex3f(-20, -0.5, 20);
@@ -392,20 +393,20 @@ void lighting() {
 }
 
 void init() {
-//    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
+    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
 
-    
+
     glEnable(GL_COLOR_MATERIAL);
 
-//    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 
-//    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-    lighting();
+    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    //    lighting();
 }
 
 void resetScene() {
@@ -432,7 +433,6 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glRotatef(cameraX, cameraX, cameraY, cameraZ);
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
@@ -444,26 +444,35 @@ void display() {
 }
 
 void keyboard(int key, int x, int y) {
+    if (rotate > 360) {
+        rotate -= 360;
+    }
     switch (key) {
         case GLUT_KEY_LEFT:
-            cameraX -= 0.2;
-            cameraZ += 0.2;
+            rotate += 1;
             break;
         case GLUT_KEY_RIGHT:
-            cameraX += 0.2;
-            cameraZ -= 0.2;
+            rotate -= 1;
             break;
         case GLUT_KEY_UP:
+            cameraX += 0.2;
             cameraY += 0.2;
-            break;
-        case GLUT_KEY_DOWN:
-            cameraY -= 0.2;
-            break;
-        case GLUT_KEY_HOME:
             cameraZ += 0.2;
             break;
-        case GLUT_KEY_END:
+        case GLUT_KEY_DOWN:
+            cameraX -= 0.2;
+            cameraY -= 0.2;
             cameraZ -= 0.2;
+            break;
+        case GLUT_KEY_HOME:
+            cameraX = 10;
+            cameraY = 10;
+            cameraZ = 10;
+            break;
+        case GLUT_KEY_END:
+            cameraX = 30;
+            cameraY = 30;
+            cameraZ = 30;
             break;
         case 27:
             exit(0);
@@ -480,6 +489,7 @@ int main(int argc, char **argv) {
     cameraX = 10;
     cameraY = 10;
     cameraZ = 10;
+    rotate = 0;
 
     atexit(resetScene);
     init();
