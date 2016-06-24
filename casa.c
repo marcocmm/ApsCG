@@ -372,16 +372,40 @@ void drawFloor() {
     glPopMatrix();
 }
 
-void init() {
-    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
-    glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
-    glShadeModel(GL_SMOOTH);
+void lighting() {
+    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
-    glEnable(GL_DEPTH_TEST);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, black);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+
+    //ativando luz ambiente global
+    float global_ambient[4] = {0.9f, 0.9f, 0.9f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+
+    //ativa a iluminação
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+}
 
-    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+void init() {
+//    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
+    glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
+
+    
+    glEnable(GL_COLOR_MATERIAL);
+
+//    glShadeModel(GL_SMOOTH);
+
+    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_LIGHTING);
+//    glEnable(GL_LIGHT0);
+
+//    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    lighting();
 }
 
 void resetScene() {
@@ -408,6 +432,7 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    glRotatef(cameraX, cameraX, cameraY, cameraZ);
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
@@ -465,6 +490,10 @@ int main(int argc, char **argv) {
     glutSpecialFunc(keyboard);
 
     glutMainLoop();
-
+    /*
+     * atenuação radial
+     * duas fontes de luz, ambiente e acima do solo
+     * 
+     */
     return 0;
 }
