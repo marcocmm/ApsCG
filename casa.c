@@ -360,23 +360,24 @@ void drawObject(Object *object) {
 
             glVertex4fv(object->vertices [object->faces[i].vertices[j]].xyzw);
         }
-        glRotatef(90, 0.0f, 0.0f, 1.0f);
+//        glScaled(10,10,10);
         glEnd();
     }
     //    rotacionaBalanco();
 }
 
-void drawBalanco(Object *object) {
-    //    glPushMatrix();
-        drawObject(object);
-    //    glRotatef(90, 0.0f, 1.0f, 0.0f);
-    //    glPopMatrix();
+void drawSwing(Object *object) {
+        glPushMatrix();
+        glRotatef(45, 1.0f, 0.0f, 0.0f);
+        drawObject(object); 
+        glPopMatrix();
 }
 
 void drawFloor() {
     glPushMatrix();
     //    rotacionaBalanco();
     glRotatef(rotate, 0, 1, 0);
+//        glRotatef(90, 0.0f, 0.0f, 1.0f);
     
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
@@ -472,7 +473,7 @@ void display() {
     glScalef(zoom, zoom, 1.0f);
 
     //    drawObject(casa);
-    drawBalanco(casa);
+    drawSwing(casa);
     drawFloor();
     glFlush();
     glutSwapBuffers();
