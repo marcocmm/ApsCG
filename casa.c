@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "obj.h"
+#include "casa.h"
 
 void resetModel(Object *object) {
     int i;
