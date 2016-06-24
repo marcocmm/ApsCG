@@ -405,6 +405,24 @@ void reshape(int w, int h) {
     glutPostRedisplay();
 }
 
+void reshapeSwing(int w, int h) {
+    if (h == 0)
+        h = 1;
+
+    glViewport(0, 10, (GLsizei) w, (GLsizei) h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.0, w / (GLdouble) h, 0.1, 1000.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glutPostRedisplay();
+}
+
+
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -461,7 +479,7 @@ int main(int argc, char **argv) {
 //    init("casa.obj");
     init("./objetos/chair_swing/swingcushion.obj");
 
-    glutReshapeFunc(reshape);
+    glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
 
