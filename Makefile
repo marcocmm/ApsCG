@@ -1,7 +1,7 @@
 ############################# Makefile ##########################
 all:
-	gcc -c obj.c -lGL -lglut -lGLU -Wall -ansi -ggdb
-	gcc -o main obj.o -lGL -lglut -lGLU -Wall -ansi -ggdb
+	gcc -c obj.c -lGL -lglut -lGLU -Wall -ggdb
+	gcc -o main obj.o -lGL -lglut -lGLU -Wall -ggdb
 
 clean:
 	rm -rf *.o

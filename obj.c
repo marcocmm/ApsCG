@@ -5,106 +5,95 @@
 
 #include "obj.h"
 
-/**
- * Free resources allocated for the model.
- */
-void resetModel(struct object *mdl) {
+void resetModel(Object *object) {
     int i;
 
-    if (mdl) {
-        if (mdl->vertices) {
-            free(mdl->vertices);
-            mdl->vertices = NULL;
+    if (object) {
+        if (object->vertices) {
+            free(object->vertices);
+            object->vertices = NULL;
         }
 
-        if (mdl->texCoords) {
-            free(mdl->texCoords);
-            mdl->texCoords = NULL;
+        if (object->texCoords) {
+            free(object->texCoords);
+            object->texCoords = NULL;
         }
 
-        if (mdl->normais) {
-            free(mdl->normais);
-            mdl->normais = NULL;
+        if (object->normais) {
+            free(object->normais);
+            object->normais = NULL;
         }
 
-        if (mdl->faces) {
-            for (i = 0; i < mdl->num_faces; ++i) {
-                if (mdl->faces[i].vertices)
-                    free(mdl->faces[i].vertices);
+        if (object->faces) {
+            for (i = 0; i < object->quantidadeFaces; ++i) {
+                if (object->faces[i].vertices)
+                    free(object->faces[i].vertices);
 
-                if (mdl->faces[i].texturas)
-                    free(mdl->faces[i].texturas);
+                if (object->faces[i].texturas)
+                    free(object->faces[i].texturas);
 
-                if (mdl->faces[i].normais)
-                    free(mdl->faces[i].normais);
+                if (object->faces[i].normais)
+                    free(object->faces[i].normais);
             }
 
-            free(mdl->faces);
-            mdl->faces = NULL;
+            free(object->faces);
+            object->faces = NULL;
         }
     }
 }
 
-/**
- * Allocate resources for the model after first pass.
- */
-int createObject(struct object *mdl) {
-    if (mdl->size) {
-        mdl->vertices = (struct vertice *)
-                malloc(sizeof (struct vertice) * mdl->size);
-        if (!mdl->vertices)
+int createObject(Object *object) {
+    if (object->quantidadeVertices) {
+        object->vertices = (struct vertice *)
+                malloc(sizeof (struct vertice) * object->quantidadeVertices);
+        if (!object->vertices)
             return 0;
     }
 
-    if (mdl->num_texCoords) {
-        mdl->texCoords = (struct textura *)
-                malloc(sizeof (struct textura) * mdl->num_texCoords);
-        if (!mdl->texCoords)
+    if (object->quantidadeTexturas) {
+        object->texCoords = (struct textura *)
+                malloc(sizeof (struct textura) * object->quantidadeTexturas);
+        if (!object->texCoords)
             return 0;
     }
 
-    if (mdl->num_normals) {
-        mdl->normais = (struct normal *)
-                malloc(sizeof (struct normal) * mdl->num_normals);
-        if (!mdl->normais)
+    if (object->quantidadeNormais) {
+        object->normais = (struct normal *)
+                malloc(sizeof (struct normal) * object->quantidadeNormais);
+        if (!object->normais)
             return 0;
     }
 
-    if (mdl->num_faces) {
-        mdl->faces = (struct face *)
-                calloc(mdl->num_faces, sizeof (struct face));
-        if (!mdl->faces)
+    if (object->quantidadeFaces) {
+        object->faces = (struct face *)
+                calloc(object->quantidadeFaces, sizeof (struct face));
+        if (!object->faces)
             return 0;
     }
 
     return 1;
 }
 
-/**
- * Load an OBJ model from file -- first pass.
- * Get the number of triangles/vertices/texture coords for
- * allocating buffers.
- */
-int initializeObject(FILE *fp, struct object *mdl) {
+int initializeObject(FILE *file, Object *object) {
     int v, t, n;
     char buf[256];
 
-    while (!feof(fp)) {
+    while (!feof(file)) {
         /* Read whole line */
-        fgets(buf, sizeof (buf), fp);
+        fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
             {
                 if (buf[1] == ' ') {
                     /* Vertex */
-                    mdl->size++;
+                    object->quantidadeVertices++;
                 } else if (buf[1] == 't') {
                     /* Texture coords. */
-                    mdl->num_texCoords++;
+                    object->quantidadeTexturas++;
                 } else if (buf[1] == 'n') {
                     /* Normal vector */
-                    mdl->num_normals++;
+                    object->quantidadeNormais++;
                 } else {
                     printf("Warning: unknown token \"%s\"! (ignoring)\n", buf);
                 }
@@ -116,21 +105,21 @@ int initializeObject(FILE *fp, struct object *mdl) {
             {
                 /* Face */
                 if (sscanf(buf + 2, "%d/%d/%d", &v, &n, &t) == 3) {
-                    mdl->num_faces++;
-                    mdl->has_texCoords = 1;
-                    mdl->has_normals = 1;
+                    object->quantidadeFaces++;
+                    object->possuiTextura = 1;
+                    object->possuiNormais = 1;
                 } else if (sscanf(buf + 2, "%d//%d", &v, &n) == 2) {
-                    mdl->num_faces++;
-                    mdl->has_texCoords = 0;
-                    mdl->has_normals = 1;
+                    object->quantidadeFaces++;
+                    object->possuiTextura = 0;
+                    object->possuiNormais = 1;
                 } else if (sscanf(buf + 2, "%d/%d", &v, &t) == 2) {
-                    mdl->num_faces++;
-                    mdl->has_texCoords = 1;
-                    mdl->has_normals = 0;
+                    object->quantidadeFaces++;
+                    object->possuiTextura = 1;
+                    object->possuiNormais = 0;
                 } else if (sscanf(buf + 2, "%d", &v) == 1) {
-                    mdl->num_faces++;
-                    mdl->has_texCoords = 0;
-                    mdl->has_normals = 0;
+                    object->quantidadeFaces++;
+                    object->possuiTextura = 0;
+                    object->possuiNormais = 0;
                 } else {
                     /* Should never be there or the model is very crappy */
                     fprintf(stderr, "Error: found face with no vertex!\n");
@@ -152,43 +141,39 @@ int initializeObject(FILE *fp, struct object *mdl) {
     }
 
     /* Check if informations are valid */
-    if ((mdl->has_texCoords && !mdl->num_texCoords) ||
-            (mdl->has_normals && !mdl->num_normals)) {
+    if ((object->possuiTextura && !object->quantidadeTexturas) ||
+            (object->possuiNormais && !object->quantidadeNormais)) {
         fprintf(stderr, "error: contradiction between collected info!\n");
         return 0;
     }
 
-    if (!mdl->size) {
+    if (!object->quantidadeVertices) {
         fprintf(stderr, "error: no vertex found!\n");
         return 0;
     }
 
     printf("first pass results: found\n");
-    printf("   * %i vertices\n", mdl->size);
-    printf("   * %i texture coords.\n", mdl->num_texCoords);
-    printf("   * %i normal vectors\n", mdl->num_normals);
-    printf("   * %i faces\n", mdl->num_faces);
-    printf("   * has texture coords.: %s\n", mdl->has_texCoords ? "yes" : "no");
-    printf("   * has normals: %s\n", mdl->has_normals ? "yes" : "no");
+    printf("   * %i vertices\n", object->quantidadeVertices);
+    printf("   * %i texture coords.\n", object->quantidadeTexturas);
+    printf("   * %i normal vectors\n", object->quantidadeNormais);
+    printf("   * %i faces\n", object->quantidadeFaces);
+    printf("   * has texture coords.: %s\n", object->possuiTextura ? "yes" : "no");
+    printf("   * has normals: %s\n", object->possuiNormais ? "yes" : "no");
 
     return 1;
 }
 
-/**
- * Load an OBJ model from file -- first pass.
- * This time, read model data and feed buffers.
- */
-int populateObject(FILE *fp, struct object *mdl) {
-    struct vertice *pvert = mdl->vertices;
-    struct textura *puvw = mdl->texCoords;
-    struct normal *pnorm = mdl->normais;
-    struct face *pface = mdl->faces;
+int populateObject(FILE *file, Object *object) {
+    struct vertice *pvert = object->vertices;
+    struct textura *puvw = object->texCoords;
+    struct normal *pnorm = object->normais;
+    struct face *pface = object->faces;
     char buf[128], *pbuf;
     int i;
 
-    while (!feof(fp)) {
+    while (!feof(file)) {
         /* Read whole line */
-        fgets(buf, sizeof (buf), fp);
+        fgets(buf, sizeof (buf), file);
 
         switch (buf[0]) {
             case 'v':
@@ -244,42 +229,42 @@ int populateObject(FILE *fp, struct object *mdl) {
             case 'f':
             {
                 pbuf = buf;
-                pface->size = 0;
+                pface->quantidadeVertices = 0;
 
                 /* Count number of vertices for this face */
                 while (*pbuf) {
                     if (*pbuf == ' ')
-                        pface->size++;
+                        pface->quantidadeVertices++;
 
                     pbuf++;
                 }
 
                 /* Select primitive type */
-                if (pface->size < 3) {
+                if (pface->quantidadeVertices < 3) {
                     fprintf(stderr, "Error: a face must have at least 3 vertices!\n");
                     return 0;
-                } else if (pface->size == 3) {
+                } else if (pface->quantidadeVertices == 3) {
                     pface->tipo = GL_TRIANGLES;
-                } else if (pface->size == 4) {
+                } else if (pface->quantidadeVertices == 4) {
                     pface->tipo = GL_QUADS;
                 } else {
                     pface->tipo = GL_POLYGON;
                 }
 
                 /* Memory allocation for vertices */
-                pface->vertices = (int *) malloc(sizeof (int) * pface->size);
+                pface->vertices = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
-                if (mdl->has_texCoords)
-                    pface->texturas = (int *) malloc(sizeof (int) * pface->size);
+                if (object->possuiTextura)
+                    pface->texturas = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
-                if (mdl->has_normals)
-                    pface->normais = (int *) malloc(sizeof (int) * pface->size);
+                if (object->possuiNormais)
+                    pface->normais = (int *) malloc(sizeof (int) * pface->quantidadeVertices);
 
                 /* Read face data */
                 pbuf = buf;
                 i = 0;
 
-                for (i = 0; i < pface->size; ++i) {
+                for (i = 0; i < pface->quantidadeVertices; ++i) {
                     pbuf = strchr(pbuf, ' ');
                     pbuf++; /* Skip space */
 
@@ -300,10 +285,10 @@ int populateObject(FILE *fp, struct object *mdl) {
                     /* Indices must start at 0 */
                     pface->vertices[i]--;
 
-                    if (mdl->has_texCoords)
+                    if (object->possuiTextura)
                         pface->texturas[i]--;
 
-                    if (mdl->has_normals)
+                    if (object->possuiNormais)
                         pface->normais[i]--;
                 }
 
@@ -314,71 +299,65 @@ int populateObject(FILE *fp, struct object *mdl) {
     }
 
     printf("second pass results: read\n");
-    printf("   * %li vertices\n", pvert - mdl->vertices);
-    printf("   * %li texture coords.\n", puvw - mdl->texCoords);
-    printf("   * %li normal vectors\n", pnorm - mdl->normais);
-    printf("   * %li faces\n", pface - mdl->faces);
+    printf("   * %li vertices\n", pvert - object->vertices);
+    printf("   * %li texture coords.\n", puvw - object->texCoords);
+    printf("   * %li normal vectors\n", pnorm - object->normais);
+    printf("   * %li faces\n", pface - object->faces);
 
     return 1;
 }
 
-/**
- * Load an OBJ model from file, in two passes.
- */
-int parseObjectFile(const char *filename, struct object *mdl) {
-    FILE *fp;
+int parseObjectFile(const char *filename, Object *object) {
+    FILE *file;
 
-    fp = fopen(filename, "r");
-    if (!fp) {
+    file = fopen(filename, "r");
+    if (!file) {
         fprintf(stderr, "Error: couldn't open \"%s\"!\n", filename);
         return 0;
     }
 
     /* reset model data */
-    memset(mdl, 0, sizeof (struct object));
+    memset(object, 0, sizeof (struct object));
 
     /* first pass: read model info */
-    if (!initializeObject(fp, mdl)) {
-        fclose(fp);
+    if (!initializeObject(file, object)) {
+        fclose(file);
         return 0;
     }
 
-    rewind(fp);
+    rewind(file);
 
     /* memory allocation */
-    if (!createObject(mdl)) {
-        fclose(fp);
-        resetModel(mdl);
+    if (!createObject(object)) {
+        fclose(file);
+        resetModel(object);
         return 0;
     }
 
     /* second pass: read model data */
-    if (!populateObject(fp, mdl)) {
-        fclose(fp);
-        resetModel(mdl);
+    if (!populateObject(file, object)) {
+        fclose(file);
+        resetModel(object);
         return 0;
     }
 
-    fclose(fp);
+    fclose(file);
     return 1;
 }
 
-/**
- * Draw the OBJ model.
- */
-void drawObject(struct object *mdl) {
+void drawObject(Object *object) {
     int i, j;
 
-    for (i = 0; i < mdl->num_faces; ++i) {
-        glBegin(mdl->faces[i].tipo);
-        for (j = 0; j < mdl->faces[i].size; ++j) {
-            if (mdl->has_texCoords)
-                glTexCoord3fv(mdl->texCoords[mdl->faces[i].texturas[j]].uvw);
+    for (i = 0; i < object->quantidadeFaces; ++i) {
+        glBegin(object->faces[i].tipo);
+        for (j = 0; j < object->faces[i].quantidadeVertices; ++j) {
+            if (object->possuiTextura)
+                glTexCoord3fv(object->texCoords[object->faces[i].texturas[j]].uvw);
 
-            if (mdl->has_normals)
-                glNormal3fv(mdl->normais[mdl->faces[i].normais[j]].ijk);
+            if (object->possuiNormais)
+                glNormal3fv(object->normais[object->faces[i].normais[j]].ijk);
 
-            glVertex4fv(mdl->vertices [mdl->faces[i].vertices[j]].xyzw);
+            glVertex4fv(object->vertices [object->faces[i].vertices[j]].xyzw);
         }
         glEnd();
     }
@@ -388,20 +367,18 @@ void drawFloor() {
     glPushMatrix();
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
-    glVertex3f(-5, -0.5, 5);
-    glVertex3f(5, -0.5, 5);
-    glVertex3f(5, -0.5, -5);
-    glVertex3f(-5, -0.5, -5);
+    glVertex3f(-20, -0.5, 20);
+    glVertex3f(20, -0.5, 20);
+    glVertex3f(20, -0.5, -20);
+    glVertex3f(-20, -0.5, -20);
     glEnd();
-    glCallList(glGenList);
     glPopMatrix();
 }
 
 void init(const char *filename) {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
-
     /* Initialize OpenGL context */
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glShadeModel(GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
@@ -411,12 +388,12 @@ void init(const char *filename) {
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /* Load OBJ model file */
-    if (!parseObjectFile(filename, &objfile))
+    if (!parseObjectFile(filename, &object))
         exit(EXIT_FAILURE);
 }
 
-void cleanup() {
-    resetModel(&objfile);
+void resetScene() {
+    resetModel(&object);
 }
 
 void reshape(int w, int h) {
@@ -439,38 +416,38 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    gluLookAt(obsX, obsY, obsZ,
+    gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
 
     /* Draw the model */
-    drawObject(&objfile);
+    drawObject(&object);
     drawFloor();
-
+    glFlush(); //aaaa
     glutSwapBuffers();
 }
 
 void keyboard(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
-            obsX -= 0.2;
-            obsZ += 0.2;
+            cameraX -= 0.2;
+            cameraZ += 0.2;
             break;
         case GLUT_KEY_RIGHT:
-            obsX += 0.2;
-            obsZ -= 0.2;
+            cameraX += 0.2;
+            cameraZ -= 0.2;
             break;
         case GLUT_KEY_UP:
-            obsY += 0.2;
+            cameraY += 0.2;
             break;
         case GLUT_KEY_DOWN:
-            obsY -= 0.2;
+            cameraY -= 0.2;
             break;
         case GLUT_KEY_HOME:
-            obsZ += 0.2;
+            cameraZ += 0.2;
             break;
         case GLUT_KEY_END:
-            obsZ -= 0.2;
+            cameraZ -= 0.2;
             break;
         case 27:
             exit(0);
@@ -478,17 +455,17 @@ void keyboard(int key, int x, int y) {
     glutPostRedisplay();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(1280, 720);
-    glutCreateWindow("OBJ Model");
+    glutCreateWindow("Casa Numero 0");
 
-    obsX = 10;
-    obsY = 10;
-    obsZ = 10;
+    cameraX = 10;
+    cameraY = 10;
+    cameraZ = 10;
 
-    atexit(cleanup);
+    atexit(resetScene);
     init("casa.obj");
 
     glutReshapeFunc(reshape);
