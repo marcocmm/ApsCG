@@ -447,6 +447,30 @@ void keyboard(int key, int x, int y) {
     if (rotate > 360) {
         rotate -= 360;
     }
+    if (cameraX < 0) {
+        cameraX = 0;
+        return;
+    }
+    if (cameraY < 0) {
+        cameraY = 0;
+        return;
+    }
+    if (cameraZ < 0) {
+        cameraZ = 0;
+        return;
+    }
+    if (cameraX > 20) {
+        cameraX = 20;
+        return;
+    }
+    if (cameraY > 20) {
+        cameraY = 20;
+        return;
+    }
+    if (cameraZ > 20) {
+        cameraZ = 20;
+        return;
+    }
     switch (key) {
         case GLUT_KEY_LEFT:
             rotate += 1;
@@ -473,6 +497,12 @@ void keyboard(int key, int x, int y) {
             cameraX = 30;
             cameraY = 30;
             cameraZ = 30;
+            break;
+        case GLUT_KEY_F1:
+            cameraY -= 0.2;
+            break;
+        case GLUT_KEY_F2:
+            cameraY += 0.2;
             break;
         case 27:
             exit(0);
