@@ -13,8 +13,8 @@ void rotateAllElements() {
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(0.05, 0.05, 0.05);
-    glTranslatef(80, 1, 0);
+    glScalef(0.3, 0.3, 0.3);
+    glTranslatef(80, 1, 30);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
     drawObject(balanco);
     glPopMatrix();
@@ -36,8 +36,8 @@ void drawFloor() {
 void drawHouse() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(5, 5, 5);
-    glTranslatef(0, 0, 0);
+    glScalef(2.5, 2.5, 2.5);
+    glTranslatef(0, 0, -7);
     drawObject(casa);
     glPopMatrix();
 }
@@ -45,8 +45,9 @@ void drawHouse() {
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(0.03, 0.03, 0.03);
-    glTranslatef(100, 200, 0);
+    glRotated(90,0,1,0);
+    glScalef(0.018, 0.018, 0.018);
+    glTranslatef(200, 200, -1000);
     drawObject(carro);
     glPopMatrix();
 }
