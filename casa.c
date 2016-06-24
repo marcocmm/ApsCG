@@ -348,7 +348,7 @@ void rotacionaBalanco() {
 
 void drawObject(Object *object) {
     int i, j;
-
+    glRotatef(rotate, 0, 1, 0);
     for (i = 0; i < object->quantidadeFaces; ++i) {
         glBegin(object->faces[i].tipo);
         for (j = 0; j < object->faces[i].quantidadeVertices; ++j) {
@@ -376,6 +376,8 @@ void drawBalanco(Object *object) {
 void drawFloor() {
     glPushMatrix();
     //    rotacionaBalanco();
+    glRotatef(rotate, 0, 1, 0);
+    
     glColor3f(0, 1, 0);
     glBegin(GL_QUADS);
     glVertex3f(-20, -0.5, 20);
@@ -409,8 +411,9 @@ void init() {
     GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
 
-
     //    glEnable(GL_COLOR_MATERIAL);
+
+    glEnable(GL_COLOR_MATERIAL);
 
     glShadeModel(GL_SMOOTH);
 
@@ -462,7 +465,6 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glRotatef(cameraX, cameraX, cameraY, cameraZ);
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
@@ -477,26 +479,65 @@ void display() {
 }
 
 void keyboard(int key, int x, int y) {
+    if (rotate > 360) {
+        rotate -= 360;
+    }
+    if (cameraX < 5) {
+        cameraX = 5;
+        return;
+    }
+    if (cameraY < 0) {
+        cameraY = 0;
+        return;
+    }
+    if (cameraZ < 5) {
+        cameraZ = 5;
+        return;
+    }
+    if (cameraX > 20) {
+        cameraX = 20;
+        return;
+    }
+    if (cameraY > 20) {
+        cameraY = 20;
+        return;
+    }
+    if (cameraZ > 20) {
+        cameraZ = 20;
+        return;
+    }
     switch (key) {
         case GLUT_KEY_LEFT:
-            cameraX -= 0.2;
-            cameraZ += 0.2;
+            rotate += 1;
             break;
         case GLUT_KEY_RIGHT:
-            cameraX += 0.2;
-            cameraZ -= 0.2;
+            rotate -= 1;
             break;
         case GLUT_KEY_UP:
+            cameraX += 0.2;
             cameraY += 0.2;
-            break;
-        case GLUT_KEY_DOWN:
-            cameraY -= 0.2;
-            break;
-        case GLUT_KEY_HOME:
             cameraZ += 0.2;
             break;
-        case GLUT_KEY_END:
+        case GLUT_KEY_DOWN:
+            cameraX -= 0.2;
+            cameraY -= 0.2;
             cameraZ -= 0.2;
+            break;
+        case GLUT_KEY_HOME:
+            cameraX = 10;
+            cameraY = 10;
+            cameraZ = 10;
+            break;
+        case GLUT_KEY_END:
+            cameraX = 30;
+            cameraY = 30;
+            cameraZ = 30;
+            break;
+        case GLUT_KEY_F1:
+            cameraY -= 0.2;
+            break;
+        case GLUT_KEY_F2:
+            cameraY += 0.2;
             break;
         case GLUT_DOWN:
             cameraZ -= 0.2;
@@ -516,6 +557,7 @@ int main(int argc, char **argv) {
     cameraX = 10;
     cameraY = 10;
     cameraZ = 10;
+    rotate = 0;
 
     atexit(resetScene);
     //    init("./objetos/chair_swing/swingcushion.obj");

@@ -7,6 +7,8 @@ typedef struct face Face;
 typedef struct casa Object;
 
 GLdouble cameraX, cameraY, cameraZ;
+Object* casa;
+GLint rotate;
 
 double rotate_y=45; 
 double rotate_x=45;
@@ -60,5 +62,3 @@ struct casa {
     Normal *normais;
     Face *faces;
 };
-
-Object* casa;
