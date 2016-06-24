@@ -447,16 +447,16 @@ void keyboard(int key, int x, int y) {
     if (rotate > 360) {
         rotate -= 360;
     }
-    if (cameraX < 0) {
-        cameraX = 0;
+    if (cameraX < 5) {
+        cameraX = 5;
         return;
     }
     if (cameraY < 0) {
         cameraY = 0;
         return;
     }
-    if (cameraZ < 0) {
-        cameraZ = 0;
+    if (cameraZ < 5) {
+        cameraZ = 5;
         return;
     }
     if (cameraX > 20) {
