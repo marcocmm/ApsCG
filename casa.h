@@ -52,9 +52,9 @@ struct casa {
     int possuiNormais;
 
     Vertice *vertices;
-    Textura *texCoords;
+    Textura *texturas;
     Normal *normais;
     Face *faces;
 };
 
-Object object;
+Object* casa;

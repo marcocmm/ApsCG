@@ -14,9 +14,9 @@ void resetModel(Object *object) {
             object->vertices = NULL;
         }
 
-        if (object->texCoords) {
-            free(object->texCoords);
-            object->texCoords = NULL;
+        if (object->texturas) {
+            free(object->texturas);
+            object->texturas = NULL;
         }
 
         if (object->normais) {
@@ -42,7 +42,26 @@ void resetModel(Object *object) {
     }
 }
 
-int createObject(Object *object) {
+Object* createObject() {
+    Object* object = (Object*) malloc(sizeof (Object));
+
+    object->possuiNormais = 0;
+    object->possuiTextura = 0;
+    object->quantidadeFaces = 0;
+    object->quantidadeNormais = 0;
+    object->quantidadeTexturas = 0;
+    object->quantidadeVertices = 0;
+
+    object->faces = NULL;
+    object->normais = NULL;
+    object->texturas = NULL;
+    object->vertices = NULL;
+
+    memset(object, 0, sizeof (Object));
+    return object;
+}
+
+int alocateMemmory(Object *object) {
     if (object->quantidadeVertices) {
         object->vertices = (Vertice *)
                 malloc(sizeof (Vertice) * object->quantidadeVertices);
@@ -51,9 +70,9 @@ int createObject(Object *object) {
     }
 
     if (object->quantidadeTexturas) {
-        object->texCoords = (Textura *)
+        object->texturas = (Textura *)
                 malloc(sizeof (Textura) * object->quantidadeTexturas);
-        if (!object->texCoords)
+        if (!object->texturas)
             return 0;
     }
 
@@ -74,7 +93,7 @@ int createObject(Object *object) {
     return 1;
 }
 
-int initializeObject(FILE *file, Object *object) {
+int countAttributes(FILE *file, Object *object) {
     int v, t, n;
     char buf[256];
 
@@ -157,7 +176,7 @@ int initializeObject(FILE *file, Object *object) {
 
 int populateObject(FILE *file, Object *object) {
     Vertice *pvert = object->vertices;
-    Textura *puvw = object->texCoords;
+    Textura *puvw = object->texturas;
     Normal *pnorm = object->normais;
     Face *pface = object->faces;
     char buf[128], *pbuf;
@@ -282,14 +301,14 @@ int populateObject(FILE *file, Object *object) {
 
     printf("second pass results: read\n");
     printf("   * %li vertices\n", pvert - object->vertices);
-    printf("   * %li texture coords.\n", puvw - object->texCoords);
+    printf("   * %li texture coords.\n", puvw - object->texturas);
     printf("   * %li normal vectors\n", pnorm - object->normais);
     printf("   * %li faces\n", pface - object->faces);
 
     return 1;
 }
 
-int parseObjectFile(const char *filename, Object *object) {
+Object* parseObjectFile(const char *filename) {
     FILE *file;
 
     file = fopen(filename, "r");
@@ -298,16 +317,16 @@ int parseObjectFile(const char *filename, Object *object) {
         return 0;
     }
 
-    memset(object, 0, sizeof (Object));
+    Object* object = createObject();
 
-    if (!initializeObject(file, object)) {
+    if (!countAttributes(file, object)) {
         fclose(file);
         return 0;
     }
 
     rewind(file);
 
-    if (!createObject(object)) {
+    if (!alocateMemmory(object)) {
         fclose(file);
         resetModel(object);
         return 0;
@@ -320,7 +339,7 @@ int parseObjectFile(const char *filename, Object *object) {
     }
 
     fclose(file);
-    return 1;
+    return object;
 }
 
 void drawObject(Object *object) {
@@ -330,7 +349,7 @@ void drawObject(Object *object) {
         glBegin(object->faces[i].tipo);
         for (j = 0; j < object->faces[i].quantidadeVertices; ++j) {
             if (object->possuiTextura)
-                glTexCoord3fv(object->texCoords[object->faces[i].texturas[j]].uvw);
+                glTexCoord3fv(object->texturas[object->faces[i].texturas[j]].uvw);
 
             if (object->possuiNormais)
                 glNormal3fv(object->normais[object->faces[i].normais[j]].ijk);
@@ -366,7 +385,7 @@ void init() {
 }
 
 void resetScene() {
-    resetModel(&object);
+    resetModel(casa);
 }
 
 void reshape(int w, int h) {
@@ -393,7 +412,7 @@ void display() {
             0, 0, 0,
             0, 1, 0);
 
-    drawObject(&object);
+    drawObject(casa);
     drawFloor();
     glFlush();
     glutSwapBuffers();
@@ -439,9 +458,7 @@ int main(int argc, char **argv) {
 
     atexit(resetScene);
     init();
-    if (!parseObjectFile("casa.obj", &object)) {
-        exit(EXIT_FAILURE);
-    }
+    casa = parseObjectFile("casa.obj");
 
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
