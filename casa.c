@@ -26,7 +26,16 @@ void drawSwing() {
 void drawFloor() {
     glPushMatrix();
     alignScene();
+    
+    GLfloat diffuse[4] = {0.65f, 0.65f, 0.0f, 1.0f};
+    GLfloat specular[4] = {0.9f, 0.9f, 0.9f, 1.0f};
+    GLfloat shininess = 65.0f;
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     glColor3f(0.0f, 0.3f, 0.0f);
+    
     glBegin(GL_QUADS);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
@@ -57,8 +66,8 @@ void drawPost() {
 void drawCar() {
     glPushMatrix();
     alignScene();
-//    glRotated(-90, 1, 0, 0);
-//    glScalef(0.018, 0.018, 0.018);
+    //    glRotated(-90, 1, 0, 0);
+    //    glScalef(0.018, 0.018, 0.018);
     glRotated(rotateCar_z, 0, 1, 0);
     glTranslatef(translatefCar_x, 0, 10);
     glmDraw(carro, GLM_COLOR);
