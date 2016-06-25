@@ -26,16 +26,16 @@ void drawSwing() {
 void drawFloor() {
     glPushMatrix();
     alignScene();
-    
+
     GLfloat diffuse[4] = {0.65f, 0.65f, 0.0f, 1.0f};
     GLfloat specular[4] = {0.9f, 0.9f, 0.9f, 1.0f};
     GLfloat shininess = 65.0f;
-    
+
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     glColor3f(0.0f, 0.3f, 0.0f);
-    
+
     glBegin(GL_QUADS);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
@@ -200,7 +200,7 @@ void display() {
     drawHouse();
     //    drawSwing();
     drawCar();
-    //    drawPost();
+    drawPost();
     drawSun();
     glutSwapBuffers();
 }
@@ -373,7 +373,7 @@ int main(int argc, char **argv) {
     casa = glmReadOBJ("Cyprys_House.obj");
     //    balanco = glmReadOBJ("");
     carro = glmReadOBJ("koenigsegg.obj");
-    //    post = glmReadOBJ("");
+    post = glmReadOBJ("black lamp spotIVI 01.obj");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
