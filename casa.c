@@ -45,6 +45,7 @@ void drawHouse() {
     glScalef(2.5, 2.5, 2.5);
     glTranslatef(0, -1, -7);
     drawObject(casa);
+    //    drawSun();
     glPopMatrix();
 }
 
@@ -68,6 +69,22 @@ void drawCar() {
     glTranslatef(translatefCar_x, 200, -1000);
     drawObject(carro);
     glPopMatrix();
+}
+
+void drawSun() {
+    glPushMatrix();
+    rotateAllElements();
+    glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
+    glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
+    //    glTranslatef(1.0,0.0,0.0);
+    //    glRotatef(15.0f*translatefCar_x,0.0,1.0,0.0);
+    glutSolidSphere(6, 40, 40);
+    glPopMatrix();
+}
+
+void moveSun() {
+
+
 }
 
 void init() {
@@ -171,6 +188,7 @@ void display() {
     drawFloor();
     drawCar();
     drawPost();
+    drawSun();
 
     glutSwapBuffers();
 }
@@ -189,7 +207,14 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
                 translatefCar_x += 15;
             }
             break;
-
+        case 'z':
+            translatefSun_z += 1;
+            translatefSun_y += 2;
+            break;
+        case 'v':
+            translatefSun_y -= 1;
+            translatefSun_z += 1;
+            break;
 
         default:
             break;
@@ -207,6 +232,34 @@ void moveCarLR(unsigned char key, int xmouse, int ymouse) {
             break;
 
     }
+}
+
+void timerSun(int value) {
+    if (inverteSun == 0) {
+        if (translatefSun_y <= 70) {
+            translatefSun_z += 1;
+            translatefSun_y += 2;
+            translatefSun_x += 0.5;
+        } else {
+            inverteSun = 1;
+
+
+        }
+    }
+    if (inverteSun == 1) {
+        if (translatefSun_y > -3) {
+            translatefSun_y -= 1;
+            translatefSun_z += 1.5;
+            translatefSun_x -= 1.1;
+        } else {
+            inverteSun = 0;
+            translatefSun_x = 20;
+            translatefSun_y = -10;
+            translatefSun_z = -60;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(60, timerSun, 1);
 }
 
 void keyboard(int key, int x, int y) {
@@ -313,7 +366,8 @@ int main(int argc, char **argv) {
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(moveCar);
-//    glutKeyboardFunc(moveCarLR);
+    glutTimerFunc(60, timerSun, 1);
+    //    glutKeyboardFunc(moveCarLR);
 
     glutMainLoop();
     /*
