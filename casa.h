@@ -22,7 +22,3 @@ GLMmodel *casa;
 GLMmodel *balanco;
 GLMmodel *carro;
 GLMmodel *post;
-<<<<<<< HEAD
-=======
-
->>>>>>> 339b6a4155bbe14365becb113a791c57a3ac6080
