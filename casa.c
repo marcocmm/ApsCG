@@ -57,10 +57,10 @@ void drawPost() {
 void drawCar() {
     glPushMatrix();
     alignScene();
-    glRotated(-90, 1, 0, 0);
-    glScalef(0.018, 0.018, 0.018);
-    glRotated(rotateCar_z, 0, 0, 1);
-    glTranslatef(translatefCar_x, 0, 75);
+//    glRotated(-90, 1, 0, 0);
+//    glScalef(0.018, 0.018, 0.018);
+    glRotated(rotateCar_z, 0, 1, 0);
+    glTranslatef(translatefCar_x, 0, 10);
     glmDraw(carro, GLM_COLOR);
     glPopMatrix();
 }
@@ -70,7 +70,7 @@ void drawSun() {
     alignScene();
     glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
     glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
-    glutSolidSphere(6, 40, 40);
+    glutSolidSphere(10, 40, 40);
     glPopMatrix();
 }
 
@@ -111,7 +111,7 @@ void init() {
 
     glEnable(GL_LIGHT1);
 
-    GLfloat ambientSun[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat ambientSun[4] = {0.4f, 0.4f, 0.4f, 1.0f};
     glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
 
     glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, attenuationSun);
@@ -119,6 +119,9 @@ void init() {
     glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, attenuationSun);
 
     glEnable(GL_LIGHT2);
+
+    GLfloat global_ambient[4] = {0.2f, 0.2f, 0.2f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -172,11 +175,13 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    luz += 0.1;
-    if (luz > 1) {
-        luz = 0;
+    if (isDayLight) {
+        luz += 0.007;
+    } else {
+        luz -= 0.007;
     }
-    glClearColor(luz, luz, luz, 1.0f);
+
+    glClearColor(0, luz, luz, 1.0f);
 
     gluLookAt(cameraX, cameraY, cameraZ,
             focoX, focoY, focoZ,
@@ -247,30 +252,32 @@ void keyboardLetras(unsigned char key, int xmouse, int ymouse) {
 }
 
 void timerSun(int value) {
-    if (inverteSun == 0) {
+    if (!isDayLight) {
         if (translatefSun_y <= 70) {
             translatefSun_z += 1;
             translatefSun_y += 2;
             translatefSun_x += 0.5;
             attenuationSun += 0.2;
             glEnable(GL_LIGHT2);
+            glEnable(GL_LIGHT_MODEL_AMBIENT);
         } else {
-            inverteSun = 1;
+            isDayLight = 1;
         }
     }
-    if (inverteSun == 1) {
+    if (isDayLight) {
         if (translatefSun_y > -3) {
             translatefSun_y -= 1;
             translatefSun_z += 1.5;
             translatefSun_x -= 1.1;
             attenuationSun -= 0.2;
         } else {
-            inverteSun = 0;
+            isDayLight = 0;
             translatefSun_x = 20;
             translatefSun_y = -10;
             translatefSun_z = -60;
             attenuationSun = 0.5;
             glDisable(GL_LIGHT2);
+            glDisable(GL_LIGHT_MODEL_AMBIENT);
         }
     }
     glutPostRedisplay();
@@ -356,7 +363,7 @@ void keyboard(int key, int x, int y) {
 int main(int argc, char **argv) {
     casa = glmReadOBJ("Cyprys_House.obj");
     //    balanco = glmReadOBJ("");
-    carro = glmReadOBJ("599obj.obj");
+    carro = glmReadOBJ("koenigsegg.obj");
     //    post = glmReadOBJ("");
 
     glutInit(&argc, argv);

@@ -12,14 +12,14 @@ GLdouble focoZ = 0;
 GLint rotateScene = 0;
 GLfloat luz = 0;
 
-GLint translatefCar_x = -1000;
+GLint translatefCar_x = 0;
 GLint rotateCar_z = 0;
 GLint y = 1;
 
 GLint translatefSun_x = 20;
 GLint translatefSun_y = -10;
 GLint translatefSun_z = -60;
-GLint inverteSun = 0;
+GLint isDayLight = 0;
 GLfloat attenuationSun = 0.5;
 
 GLMmodel *casa;
