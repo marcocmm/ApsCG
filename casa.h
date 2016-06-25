@@ -1,6 +1,7 @@
 #pragma once
 
 GLdouble cameraX, cameraY, cameraZ;
+GLdouble focoX, focoY, focoZ;
 GLint rotate;
 Object* casa;
 Object* balanco;
