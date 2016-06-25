@@ -5,3 +5,4 @@ GLint rotate;
 Object* casa;
 Object* balanco;
 Object* carro;
+Object* post;
