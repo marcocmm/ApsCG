@@ -75,13 +75,29 @@ void drawCar() {
     glPopMatrix();
 }
 
+void drawSun() {
+    glPushMatrix();
+    rotateAllElements();
+    glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
+    glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
+    //    glTranslatef(1.0,0.0,0.0);
+    //    glRotatef(15.0f*translatefCar_x,0.0,1.0,0.0);
+    glutSolidSphere(6, 40, 40);
+    glPopMatrix();
+}
+
+void moveSun() {
+
+
+}
+
 void init() {
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_LIGHTING);
 
     GLfloat ambientGlobal[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
+    //    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
     GLfloat positionLight0[] = {100.0f, 100.0f, 100.0f};
     GLfloat ambientLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -113,7 +129,7 @@ void init() {
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-//    glEnable(GL_LIGHT1);
+    //    glEnable(GL_LIGHT1);
 
     //    glEnable(GL_CULL_FACE);
     //    glCullFace(GL_BACK);
@@ -182,8 +198,7 @@ void display() {
     drawSwing();
     drawFloor();
     drawCar();
-    //    drawPost();
-
+    drawSun();
     glutSwapBuffers();
 }
 
@@ -201,7 +216,14 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
                 translatefCar_x += 15;
             }
             break;
-
+        case 'z':
+            translatefSun_z += 1;
+            translatefSun_y += 2;
+            break;
+        case 'v':
+            translatefSun_y -= 1;
+            translatefSun_z += 1;
+            break;
 
         default:
             break;
@@ -236,8 +258,8 @@ void moveFocoCamera(unsigned char key, int xmouse, int ymouse) {
             focoZ -= 1;
             break;
         case '5':
-            focoX=0;
-            focoZ=0;
+            focoX = 0;
+            focoZ = 0;
     }
 
 }
@@ -246,6 +268,34 @@ void keyboardLetras(unsigned char key, int xmouse, int ymouse) {
     moveCar(key, xmouse, ymouse);
     moveCarLR(key, xmouse, ymouse);
     moveFocoCamera(key, xmouse, ymouse);
+}
+
+void timerSun(int value) {
+    if (inverteSun == 0) {
+        if (translatefSun_y <= 70) {
+            translatefSun_z += 1;
+            translatefSun_y += 2;
+            translatefSun_x += 0.5;
+        } else {
+            inverteSun = 1;
+
+
+        }
+    }
+    if (inverteSun == 1) {
+        if (translatefSun_y > -3) {
+            translatefSun_y -= 1;
+            translatefSun_z += 1.5;
+            translatefSun_x -= 1.1;
+        } else {
+            inverteSun = 0;
+            translatefSun_x = 20;
+            translatefSun_y = -10;
+            translatefSun_z = -60;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(60, timerSun, 1);
 }
 
 void keyboard(int key, int x, int y) {
@@ -356,7 +406,7 @@ int main(int argc, char **argv) {
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(keyboardLetras);
-    //    glutKeyboardFunc(moveCarLR);
+    glutTimerFunc(60, timerSun, 1);
 
     glutMainLoop();
     /*
