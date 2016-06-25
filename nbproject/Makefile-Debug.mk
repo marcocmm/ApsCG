@@ -66,6 +66,16 @@ ${OBJECTDIR}/casa.c.gch: casa.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o "$@" casa.c
 
+${OBJECTDIR}/glm.c.gch: glm.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o "$@" glm.c
+
+${OBJECTDIR}/glm_util.c.gch: glm_util.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o "$@" glm_util.c
+
 ${OBJECTDIR}/object.c.gch: object.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"

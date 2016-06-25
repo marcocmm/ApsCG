@@ -5,6 +5,8 @@
 #include "object.h"
 #include "casa.h"
 
+#include "glm.h"
+
 void rotateAllElements() {
     glRotatef(rotate, 0, 1, 0);
 }
@@ -16,20 +18,20 @@ GLfloat getPercentageOfComponent(GLint component) {
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(getPercentageOfComponent(120), getPercentageOfComponent(68), getPercentageOfComponent(33));
+    //    glColor3f(getPercentageOfComponent(120), getPercentageOfComponent(68), getPercentageOfComponent(33));
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(80, 1, 30);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
-    drawObject(balanco);
+    //    drawObject(balanco);
+    glmDraw(balanco, GLM_TEXTURE);
     glPopMatrix();
 }
 
 void drawFloor() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(0.0f, 1.0f, 0.0f);
+    //    glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_QUADS);
-    glColor3f(0, 1, 0);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
     glVertex3f(50, 0, -50);
@@ -41,33 +43,35 @@ void drawFloor() {
 void drawHouse() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(1.0f, 1.0f, 1.0f);
+    //    glColor3f(1.0f, 1.0f, 1.0f);
     glScalef(2.5, 2.5, 2.5);
     glTranslatef(0, -1, -7);
-    drawObject(casa);
-    //    drawSun();
+    glmDraw(casa, GLM_COLOR);
+    //    drawObject(casa);
     glPopMatrix();
 }
 
 void drawPost() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(0.0f, 0.3f, 0.3f);
+    //    glColor3f(0.0f, 0.3f, 0.3f);
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(100, 0, 30);
-    drawObject(post);
+    //    drawObject(post);
+    glmDraw(post, GLM_TEXTURE);
     glPopMatrix();
 }
 
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(3.0f, 0.0f, 0.1f);
+    //    glColor3f(3.0f, 0.0f, 0.1f);
     //        glRotated(0, 0, 1, 0);
     glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
     glTranslatef(translatefCar_x, 200, -1000);
-    drawObject(carro);
+    //    drawObject(carro);
+    glmDraw(carro, GLM_TEXTURE);
     glPopMatrix();
 }
 
@@ -92,13 +96,13 @@ void init() {
 
     glEnable(GL_LIGHTING);
 
-    GLfloat ambientGlobal[4] = {0.0f, 0.6f, 0.5f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
+    GLfloat ambientGlobal[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
-    GLfloat positionLight0[] = {0.0f, 20.0f, 0.0f};
-    GLfloat ambientLight0[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat diffuseLight0[] = {0.0f, 1.0f, 0.0f, 1.0f};
-    GLfloat specularLight0[] = {1.0f, 0.0f, 1.0f, 1.0f};
+    GLfloat positionLight0[] = {100.0f, 100.0f, 100.0f};
+    GLfloat ambientLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat diffuseLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat specularLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, positionLight0);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
@@ -112,9 +116,9 @@ void init() {
     glEnable(GL_LIGHT0);
 
     GLfloat positionLight1[] = {100, 10, 30};
-    GLfloat ambientLight1[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat diffuseLight1[] = {0.0f, 1.0f, 0.0f, 1.0f};
-    GLfloat specularLight1[] = {1.0f, 0.0f, 1.0f, 1.0f};
+    GLfloat ambientLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat diffuseLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat specularLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
     glLightfv(GL_LIGHT1, GL_POSITION, positionLight1);
     glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight1);
@@ -125,16 +129,23 @@ void init() {
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-    glEnable(GL_LIGHT1);
+//    glEnable(GL_LIGHT1);
 
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+////    glClear(GL_DEPTH_BUFFER_BIT);
+////    glEnable(GL_DEPTH_TEST);
+
+    //    lighting();
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
 }
 
 void resetScene() {
-    resetModel(casa);
-    resetModel(balanco);
+    //    resetModel(casa);
+    //    resetModel(balanco);
 }
 
 void reshape(int w, int h) {
@@ -187,9 +198,7 @@ void display() {
     drawSwing();
     drawFloor();
     drawCar();
-    drawPost();
     drawSun();
-
     glutSwapBuffers();
 }
 
@@ -338,10 +347,6 @@ void keyboard(int key, int x, int y) {
     glutPostRedisplay();
 }
 
-void texture() {
-
-}
-
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
@@ -357,17 +362,21 @@ int main(int argc, char **argv) {
     atexit(resetScene);
     init();
 
-    balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
-    casa = parseObjectFile("objetos/bg4_obj.obj");
-    carro = parseObjectFile("objetos/Bugatti-Veyron.obj");
-    post = parseObjectFile("objetos/post.obj");
+    //    balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
+    //    casa = parseObjectFile("objetos/bg4_obj.obj");
+    //    carro = parseObjectFile("objetos/Bugatti-Veyron.obj");
+    //    post = parseObjectFile("objetos/post.obj");
+
+    casa = glmReadOBJ("objetos/bg4_obj.obj");
+    balanco = glmReadOBJ("objetos/chair_swing/swingcushion.obj");
+    carro = glmReadOBJ("objetos/Bugatti-Veyron.obj");
+    //    post = glmReadOBJ("objetos/post.obj");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(moveCar);
     glutTimerFunc(60, timerSun, 1);
-    //    glutKeyboardFunc(moveCarLR);
 
     glutMainLoop();
     /*

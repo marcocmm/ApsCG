@@ -5,6 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>casa.h</itemPath>
+      <itemPath>glm.h</itemPath>
+      <itemPath>glmint.h</itemPath>
       <itemPath>object.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -15,6 +17,8 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>casa.c</itemPath>
+      <itemPath>glm.c</itemPath>
+      <itemPath>glm_util.c</itemPath>
       <itemPath>object.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -49,6 +53,14 @@
       </item>
       <item path="casa.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="glm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="glm_util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmint.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="object.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="object.h" ex="false" tool="3" flavor2="0">
@@ -78,6 +90,14 @@
       <item path="casa.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="casa.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="glm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="glm_util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmint.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="object.c" ex="false" tool="0" flavor2="0">
       </item>
