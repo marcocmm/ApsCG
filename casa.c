@@ -86,18 +86,13 @@ void drawSun() {
     glPopMatrix();
 }
 
-void moveSun() {
-
-
-}
-
 void init() {
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_LIGHTING);
 
     GLfloat ambientGlobal[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
+    //    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
     GLfloat positionLight0[] = {100.0f, 100.0f, 100.0f};
     GLfloat ambientLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -129,13 +124,13 @@ void init() {
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-//    glEnable(GL_LIGHT1);
+    //    glEnable(GL_LIGHT1);
 
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
-////    glClear(GL_DEPTH_BUFFER_BIT);
-////    glEnable(GL_DEPTH_TEST);
+    //    glEnable(GL_CULL_FACE);
+    //    glCullFace(GL_BACK);
+    ////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+    ////    glClear(GL_DEPTH_BUFFER_BIT);
+    ////    glEnable(GL_DEPTH_TEST);
 
     //    lighting();
     glEnable(GL_COLOR_MATERIAL);
@@ -216,15 +211,6 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
                 translatefCar_x += 15;
             }
             break;
-        case 'z':
-            translatefSun_z += 1;
-            translatefSun_y += 2;
-            break;
-        case 'v':
-            translatefSun_y -= 1;
-            translatefSun_z += 1;
-            break;
-
         default:
             break;
     }
