@@ -3,6 +3,7 @@
 #include "glm.h"
 
 GLdouble cameraX, cameraY, cameraZ;
+GLdouble focoX, focoY, focoZ;
 GLint rotate;
 //Object* casa;
 //Object* balanco;
@@ -22,4 +23,3 @@ GLMmodel *casa;
 GLMmodel *balanco;
 GLMmodel *carro;
 GLMmodel *post;
-

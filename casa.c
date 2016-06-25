@@ -199,7 +199,7 @@ void display() {
     glClearColor(luz, luz, luz, 1.0f);
 
     gluLookAt(cameraX, cameraY, cameraZ,
-            0, 0, 0,
+            focoX, focoY, focoZ,
             0, 1, 0);
 
     drawHouse();
@@ -240,6 +240,33 @@ void moveCarLR(unsigned char key, int xmouse, int ymouse) {
             break;
 
     }
+}
+
+void moveFocoCamera(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case '6':
+            focoX += 1;
+            break;
+        case '4':
+            focoX -= 1;
+            break;
+        case '2':
+            focoZ += 1;
+            break;
+        case '8':
+            focoZ -= 1;
+            break;
+        case '5':
+            focoX = 0;
+            focoZ = 0;
+    }
+
+}
+
+void keyboardLetras(unsigned char key, int xmouse, int ymouse) {
+    moveCar(key, xmouse, ymouse);
+    moveCarLR(key, xmouse, ymouse);
+    moveFocoCamera(key, xmouse, ymouse);
 }
 
 void timerSun(int value) {
@@ -360,6 +387,9 @@ int main(int argc, char **argv) {
     cameraX = 50;
     cameraY = 50;
     cameraZ = 50;
+    focoX = 0;
+    focoY = 0;
+    focoZ = 0;
     rotate = 0;
     luz = 0;
 
@@ -379,7 +409,7 @@ int main(int argc, char **argv) {
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
-    glutKeyboardFunc(moveCar);
+    glutKeyboardFunc(keyboardLetras);
     glutTimerFunc(60, timerSun, 1);
 
     glutMainLoop();
