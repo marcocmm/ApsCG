@@ -36,6 +36,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/casa.o \
+	${OBJECTDIR}/glm.o \
+	${OBJECTDIR}/glm_util.o \
 	${OBJECTDIR}/object.o
 
 
@@ -67,6 +69,16 @@ ${OBJECTDIR}/casa.o: casa.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/casa.o casa.c
+
+${OBJECTDIR}/glm.o: glm.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glm.o glm.c
+
+${OBJECTDIR}/glm_util.o: glm_util.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glm_util.o glm_util.c
 
 ${OBJECTDIR}/object.o: object.c 
 	${MKDIR} -p ${OBJECTDIR}
