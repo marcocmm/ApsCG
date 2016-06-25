@@ -86,11 +86,6 @@ void drawSun() {
     glPopMatrix();
 }
 
-void moveSun() {
-
-
-}
-
 void init() {
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
@@ -216,15 +211,6 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
                 translatefCar_x += 15;
             }
             break;
-        case 'z':
-            translatefSun_z += 1;
-            translatefSun_y += 2;
-            break;
-        case 'v':
-            translatefSun_y -= 1;
-            translatefSun_z += 1;
-            break;
-
         default:
             break;
     }
