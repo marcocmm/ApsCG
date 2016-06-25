@@ -6,3 +6,4 @@ Object* casa;
 Object* balanco;
 Object* carro;
 Object* post;
+float luz;

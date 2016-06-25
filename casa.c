@@ -155,6 +155,12 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    luz += 0.1;
+    if (luz > 1) {
+        luz = 0;
+    }
+    glClearColor(luz, luz, luz, 1.0f);
+
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
@@ -165,7 +171,6 @@ void display() {
     drawCar();
     drawPost();
 
-    glFlush();
     glutSwapBuffers();
 }
 
@@ -259,6 +264,7 @@ int main(int argc, char **argv) {
     cameraY = 50;
     cameraZ = 50;
     rotate = 0;
+    luz = 0;
 
     atexit(resetScene);
     init();
