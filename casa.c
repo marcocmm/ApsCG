@@ -115,6 +115,13 @@ void init() {
 
 //    glEnable(GL_LIGHT1);
 
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+////    glClear(GL_DEPTH_BUFFER_BIT);
+////    glEnable(GL_DEPTH_TEST);
+
+    //    lighting();
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
@@ -288,10 +295,6 @@ void keyboard(int key, int x, int y) {
             exit(0);
     }
     glutPostRedisplay();
-}
-
-void texture() {
-
 }
 
 int main(int argc, char **argv) {
