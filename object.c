@@ -100,55 +100,39 @@ int countAttributes(FILE *file, Object *object) {
     while (!feof(file)) {
         fgets(buf, sizeof (buf), file);
 
-        switch (buf[0]) {
-            case 'v':
-            {
-                if (buf[1] == ' ') {
-                    object->quantidadeVertices++;
-                } else if (buf[1] == 't') {
-                    object->quantidadeTexturas++;
-                } else if (buf[1] == 'n') {
-                    object->quantidadeNormais++;
-                } else {
-                    printf("Warning: unknown token \"%s\"! (ignoring)\n", buf);
-                }
-
-                break;
+        if (buf[0] ==  'v') {
+            if (buf[1] == ' ') {
+                object->quantidadeVertices++;
+            } else if (buf[1] == 't') {
+                object->quantidadeTexturas++;
+            } else if (buf[1] == 'n') {
+                object->quantidadeNormais++;
+            } else {
+                printf("Warning: unknown token \"%s\"! (ignoring)\n", buf);
             }
-
-            case 'f':
-            {
-                if (sscanf(buf + 2, "%d/%d/%d", &v, &n, &t) == 3) {
-                    object->quantidadeFaces++;
-                    object->possuiTextura = 1;
-                    object->possuiNormais = 1;
-                } else if (sscanf(buf + 2, "%d//%d", &v, &n) == 2) {
-                    object->quantidadeFaces++;
-                    object->possuiTextura = 0;
-                    object->possuiNormais = 1;
-                } else if (sscanf(buf + 2, "%d/%d", &v, &t) == 2) {
-                    object->quantidadeFaces++;
-                    object->possuiTextura = 1;
-                    object->possuiNormais = 0;
-                } else if (sscanf(buf + 2, "%d", &v) == 1) {
-                    object->quantidadeFaces++;
-                    object->possuiTextura = 0;
-                    object->possuiNormais = 0;
-                } else {
-                    fprintf(stderr, "Error: found face with no vertex!\n");
-                }
-
-                break;
+        } else if (buf[0] ==   'f') {
+            if (sscanf(buf + 2, "%d/%d/%d", &v, &n, &t) == 3) {
+                object->quantidadeFaces++;
+                object->possuiTextura = 1;
+                object->possuiNormais = 1;
+            } else if (sscanf(buf + 2, "%d//%d", &v, &n) == 2) {
+                object->quantidadeFaces++;
+                object->possuiTextura = 0;
+                object->possuiNormais = 1;
+            } else if (sscanf(buf + 2, "%d/%d", &v, &t) == 2) {
+                object->quantidadeFaces++;
+                object->possuiTextura = 1;
+                object->possuiNormais = 0;
+            } else if (sscanf(buf + 2, "%d", &v) == 1) {
+                object->quantidadeFaces++;
+                object->possuiTextura = 0;
+                object->possuiNormais = 0;
+            } else {
+                fprintf(stderr, "Error: found face with no vertex!\n");
             }
-
-            case 'g':
-            {
-                fscanf(file, "%s", buf);
-                break;
-            }
-
-            default:
-                break;
+        } else if (strcmp(buf, "g") == 0) {
+            fscanf(file, "%s", buf);
+        } else if (strcmp(buf, "vn") == 0) {
         }
     }
 
