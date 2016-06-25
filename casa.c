@@ -12,8 +12,8 @@ void rotateAllElements() {
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(0.05, 0.05, 0.05);
-    glTranslatef(80, 1, 0);
+    glScalef(0.3, 0.3, 0.3);
+    glTranslatef(80, 1, 30);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
     drawObject(balanco);
     glPopMatrix();
@@ -35,8 +35,8 @@ void drawFloor() {
 void drawHouse() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(5, 5, 5);
-    glTranslatef(0, 0, 0);
+    glScalef(2.5, 2.5, 2.5);
+    glTranslatef(0, -1, -7);
     drawObject(casa);
     glPopMatrix();
 }
@@ -44,31 +44,11 @@ void drawHouse() {
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
-    glScalef(0.03, 0.03, 0.03);
-    glTranslatef(100, 200, 0);
+    glRotated(90, 0, 1, 0);
+    glScalef(0.018, 0.018, 0.018);
+    glTranslatef(200, 200, -1000);
     drawObject(carro);
     glPopMatrix();
-}
-
-void DefineLuz(){
-  //define a posição e parâmetros da luz 0
-    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
-    float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, black);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-
-    //ativando luz ambiente global
-    float global_ambient[4] = {0.7f, 0.7f, 0.7f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-
-    //ativa a iluminação
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-
 }
 
 void lighting() {
@@ -91,21 +71,20 @@ void lighting() {
 }
 
 void init() {
-//    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
+    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};;
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
-//    glClea
 
     glEnable(GL_COLOR_MATERIAL);
 
-//    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 
-//    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-    //    lighting();
-    DefineLuz();
+    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+        lighting();
+    
 }
 
 void resetScene() {
@@ -154,9 +133,9 @@ void display() {
             0, 1, 0);
 
     drawHouse();
-        drawSwing();
-        drawFloor();
-        drawCar();
+    drawSwing();
+    drawFloor();
+    drawCar();
 
     glFlush();
     glutSwapBuffers();
@@ -231,6 +210,32 @@ void keyboard(int key, int x, int y) {
     }
     glutPostRedisplay();
 }
+
+//void texture() {
+//    // Habilitar o uso de texturas 
+//    glEnable(GL_TEXTURE_2D);
+//    // Definir a forma de armazenamento dos pixels na textura (1= alinhamento por byte) 
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//
+//    // Definir quantas texturas serão usadas no programa 
+//    GLuint texture_id[MAX_NO_TEXTURES]; // vetor com os números das texturas 
+//    glGenTextures(1, texture_id); // 1 = uma textura; 
+//    // texture_id = vetor que guarda os números das texturas
+//
+//    // Definr o número da textura do cubo. 
+//    texture_id[0] = 1001;
+//
+//    // Define a textura corrente 
+//    glBindTexture(GL_TEXTURE_2D, texture_id[0]);
+//    // GL_TEXTURE_2D ==> define que será usada uma textura 2D (bitmaps) 
+//    // texture_id[CUBE_TEXTURE]  ==> define o número da textura
+//
+//    // carrega a uma imagem TGA 
+//    image_t temp_image;
+//    tgaLoad("TCG1.tga", &temp_image, TGA_FREE | TGA_LOW_QUALITY);
+//    
+//    return;
+//}
 
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
