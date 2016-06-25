@@ -62,7 +62,7 @@ void drawCar() {
     glPushMatrix();
     rotateAllElements();
     glColor3f(3.0f, 0.0f, 0.1f);
-    glRotated(90, 0, 1, 0);
+    //        glRotated(0, 0, 1, 0);
     glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
     glTranslatef(translatefCar_x, 200, -1000);
@@ -176,6 +176,7 @@ void display() {
 }
 
 void moveCar(unsigned char key, int xmouse, int ymouse) {
+
     switch (key) {
         case 'w':
             if (translatefCar_x > -1000) {
@@ -188,10 +189,24 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
                 translatefCar_x += 15;
             }
             break;
+
+
         default:
             break;
     }
     glutPostRedisplay();
+}
+
+void moveCarLR(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case 'a':
+            rotateCar_z -= 10;
+            break;
+        case 'd':
+            rotateCar_z += 10;
+            break;
+
+    }
 }
 
 void keyboard(int key, int x, int y) {
@@ -298,6 +313,7 @@ int main(int argc, char **argv) {
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(moveCar);
+//    glutKeyboardFunc(moveCarLR);
 
     glutMainLoop();
     /*
