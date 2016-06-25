@@ -74,13 +74,21 @@ void drawCar() {
     glPopMatrix();
 }
 
+void drawSun() {
+    glPushMatrix();
+    rotateAllElements();
+    glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
+    glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
+    //    glTranslatef(1.0,0.0,0.0);
+    //    glRotatef(15.0f*translatefCar_x,0.0,1.0,0.0);
+    glutSolidSphere(6, 40, 40);
+    glPopMatrix();
+}
+
 void init() {
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_LIGHTING);
-
-    GLfloat ambientGlobal[4] = {0.6f, 0.6f, 0.6f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
     GLfloat positionLight0[] = {50.0f, 50.0f, 50.0f};
     GLfloat ambientLight0[] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -109,10 +117,19 @@ void init() {
     glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
 
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.6f);
-    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.20f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.2f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
 
     glEnable(GL_LIGHT1);
+
+    GLfloat ambientSun[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
+
+    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, attenuationSun);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, attenuationSun);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, attenuationSun);
+
+    glEnable(GL_LIGHT2);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -173,15 +190,15 @@ void display() {
     glClearColor(luz, luz, luz, 1.0f);
 
     gluLookAt(cameraX, cameraY, cameraZ,
-            0, 0, 0,
+            focoX, focoY, focoZ,
             0, 1, 0);
 
-    drawHouse();
-//    drawSwing();
     drawFloor();
-//    drawCar();
-//    drawPost();
-
+    drawHouse();
+    //    drawSwing();
+    //    drawCar();
+    //    drawPost();
+    drawSun();
     glutSwapBuffers();
 }
 
@@ -212,6 +229,63 @@ void moveCarLR(unsigned char key, int xmouse, int ymouse) {
             rotateCar_z += 10;
             break;
     }
+}
+
+void moveFocoCamera(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case '6':
+            focoX += 1;
+            break;
+        case '4':
+            focoX -= 1;
+            break;
+        case '2':
+            focoZ += 1;
+            break;
+        case '8':
+            focoZ -= 1;
+            break;
+        case '5':
+            focoX = 0;
+            focoZ = 0;
+    }
+}
+
+void keyboardLetras(unsigned char key, int xmouse, int ymouse) {
+    moveCar(key, xmouse, ymouse);
+    moveCarLR(key, xmouse, ymouse);
+    moveFocoCamera(key, xmouse, ymouse);
+}
+
+void timerSun(int value) {
+    if (inverteSun == 0) {
+        if (translatefSun_y <= 70) {
+            translatefSun_z += 1;
+            translatefSun_y += 2;
+            translatefSun_x += 0.5;
+            attenuationSun += 0.2;
+            glEnable(GL_LIGHT2);
+        } else {
+            inverteSun = 1;
+        }
+    }
+    if (inverteSun == 1) {
+        if (translatefSun_y > -3) {
+            translatefSun_y -= 1;
+            translatefSun_z += 1.5;
+            translatefSun_x -= 1.1;
+            attenuationSun -= 0.2;
+        } else {
+            inverteSun = 0;
+            translatefSun_x = 20;
+            translatefSun_y = -10;
+            translatefSun_z = -60;
+            attenuationSun = 0.5;
+            glDisable(GL_LIGHT2);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(60, timerSun, 1);
 }
 
 void keyboard(int key, int x, int y) {
@@ -299,6 +373,9 @@ int main(int argc, char **argv) {
     cameraX = 50;
     cameraY = 50;
     cameraZ = 50;
+    focoX = 0;
+    focoY = 0;
+    focoZ = 0;
     rotate = 0;
     luz = 0;
 
@@ -311,14 +388,15 @@ int main(int argc, char **argv) {
     Object* postObj = parseObjectFile("");
 
     casa = glmReadOBJ("Cyprys_House.obj");
-//    balanco = glmReadOBJ("");
-//    carro = glmReadOBJ("");
-//    post = glmReadOBJ("");
+    //    balanco = glmReadOBJ("");
+    //    carro = glmReadOBJ("");
+    //    post = glmReadOBJ("");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
-    glutKeyboardFunc(moveCar);
+    glutKeyboardFunc(keyboardLetras);
+    glutTimerFunc(60, timerSun, 1);
 
     glutMainLoop();
     return 0;
