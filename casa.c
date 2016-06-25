@@ -6,8 +6,8 @@
 #include "casa.h"
 #include "glm.h"
 
-void rotateAllElements() {
-    glRotatef(rotate, 0, 1, 0);
+void alignScene() {
+    glRotatef(rotateScene, 0, 1, 0);
 }
 
 GLfloat getPercentageOfComponent(GLint component) {
@@ -16,19 +16,16 @@ GLfloat getPercentageOfComponent(GLint component) {
 
 void drawSwing() {
     glPushMatrix();
-    rotateAllElements();
-    //    glColor3f(getPercentageOfComponent(120), getPercentageOfComponent(68), getPercentageOfComponent(33));
+    alignScene();
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(80, 1, 30);
-    //    glRotatef(45, 1.0f, 0.0f, 0.0f);
-    //    drawObject(balanco);
     glmDraw(balanco, GLM_COLOR);
     glPopMatrix();
 }
 
 void drawFloor() {
     glPushMatrix();
-    rotateAllElements();
+    alignScene();
     glColor3f(0.0f, 0.3f, 0.0f);
     glBegin(GL_QUADS);
     glVertex3f(-50, 0, 50);
@@ -41,46 +38,38 @@ void drawFloor() {
 
 void drawHouse() {
     glPushMatrix();
-    rotateAllElements();
-    //    glColor3f(1.0f, 1.0f, 1.0f);
+    alignScene();
     glScalef(2.5, 2.5, 2.5);
     glTranslatef(0, 0, 0);
     glmDraw(casa, GLM_COLOR);
-    //    drawObject(casa);
     glPopMatrix();
 }
 
 void drawPost() {
     glPushMatrix();
-    rotateAllElements();
-    //    glColor3f(0.0f, 0.3f, 0.3f);
+    alignScene();
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(100, 0, 30);
-    //    drawObject(post);
     glmDraw(post, GLM_COLOR);
     glPopMatrix();
 }
 
 void drawCar() {
     glPushMatrix();
-    rotateAllElements();
-    //    glColor3f(3.0f, 0.0f, 0.1f);
-    //    glRotated(0, 0, 1, 0);
-    glRotated(rotateCar_z, 0, y, 0);
+    alignScene();
+    glRotated(-90, 1, 0, 0);
     glScalef(0.018, 0.018, 0.018);
-    glTranslatef(translatefCar_x, 200, -1000);
-    //    drawObject(carro);
+    glRotated(rotateCar_z, 0, 0, 1);
+    glTranslatef(translatefCar_x, 0, 75);
     glmDraw(carro, GLM_COLOR);
     glPopMatrix();
 }
 
 void drawSun() {
     glPushMatrix();
-    rotateAllElements();
+    alignScene();
     glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
     glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
-    //    glTranslatef(1.0,0.0,0.0);
-    //    glRotatef(15.0f*translatefCar_x,0.0,1.0,0.0);
     glutSolidSphere(6, 40, 40);
     glPopMatrix();
 }
@@ -196,7 +185,7 @@ void display() {
     drawFloor();
     drawHouse();
     //    drawSwing();
-    //    drawCar();
+    drawCar();
     //    drawPost();
     drawSun();
     glutSwapBuffers();
@@ -289,8 +278,8 @@ void timerSun(int value) {
 }
 
 void keyboard(int key, int x, int y) {
-    if (rotate > 360) {
-        rotate -= 360;
+    if (rotateScene > 360) {
+        rotateScene -= 360;
     }
     if (cameraX < 5) {
         cameraX = 5;
@@ -318,10 +307,10 @@ void keyboard(int key, int x, int y) {
     }
     switch (key) {
         case GLUT_KEY_LEFT:
-            rotate += 1;
+            rotateScene += 1;
             break;
         case GLUT_KEY_RIGHT:
-            rotate -= 1;
+            rotateScene -= 1;
             break;
         case GLUT_KEY_UP:
             cameraX -= 1;
@@ -365,32 +354,18 @@ void keyboard(int key, int x, int y) {
 }
 
 int main(int argc, char **argv) {
+    casa = glmReadOBJ("Cyprys_House.obj");
+    //    balanco = glmReadOBJ("");
+    carro = glmReadOBJ("599obj.obj");
+    //    post = glmReadOBJ("");
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(1280, 720);
     glutCreateWindow("Casa Numero 0");
 
-    cameraX = 50;
-    cameraY = 50;
-    cameraZ = 50;
-    focoX = 0;
-    focoY = 0;
-    focoZ = 0;
-    rotate = 0;
-    luz = 0;
-
     atexit(resetScene);
     init();
-
-    Object* balancoObj = parseObjectFile("");
-    Object* casaObj = parseObjectFile("Cyprys_House.obj");
-    Object* carroObj = parseObjectFile("");
-    Object* postObj = parseObjectFile("");
-
-    casa = glmReadOBJ("Cyprys_House.obj");
-    //    balanco = glmReadOBJ("");
-    //    carro = glmReadOBJ("");
-    //    post = glmReadOBJ("");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);

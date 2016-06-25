@@ -2,19 +2,26 @@
 
 #include "glm.h"
 
-GLdouble cameraX, cameraY, cameraZ;
-GLdouble focoX, focoY, focoZ;
-GLint rotate;
-float luz;
-int translatefCar_x = 200;
-int rotateCar_z = 90;
-int y = 1;
+GLdouble cameraX = 50;
+GLdouble cameraY = 50;
+GLdouble cameraZ = 50;
+GLdouble focoX = 0;
+GLdouble focoY = 0;
+GLdouble focoZ = 0;
 
-int translatefSun_x = 20;
-int translatefSun_y = -10;
-int translatefSun_z = -60;
-int inverteSun = 0;
-float attenuationSun = 0.5;
+GLint rotateScene = 0;
+GLfloat luz = 0;
+
+GLint translatefCar_x = -1000;
+GLint rotateCar_z = 0;
+GLint y = 1;
+
+GLint translatefSun_x = 20;
+GLint translatefSun_y = -10;
+GLint translatefSun_z = -60;
+GLint inverteSun = 0;
+GLfloat attenuationSun = 0.5;
+
 GLMmodel *casa;
 GLMmodel *balanco;
 GLMmodel *carro;
