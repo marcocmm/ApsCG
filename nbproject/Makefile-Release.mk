@@ -34,7 +34,11 @@ include Makefile
 OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
-OBJECTFILES=
+OBJECTFILES= \
+	${OBJECTDIR}/casa.o \
+	${OBJECTDIR}/glm.o \
+	${OBJECTDIR}/glm_util.o \
+	${OBJECTDIR}/object.o
 
 
 # C Compiler Flags
@@ -61,15 +65,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/apscg: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/apscg ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/casa.c.gch: casa.c 
+${OBJECTDIR}/casa.o: casa.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o "$@" casa.c
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/casa.o casa.c
 
-${OBJECTDIR}/object.c.gch: object.c 
+${OBJECTDIR}/glm.o: glm.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o "$@" object.c
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glm.o glm.c
+
+${OBJECTDIR}/glm_util.o: glm_util.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glm_util.o glm_util.c
+
+${OBJECTDIR}/object.o: object.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/object.o object.c
 
 # Subprojects
 .build-subprojects:
