@@ -91,7 +91,6 @@ void init() {
 
     glEnable(GL_LIGHTING);
 
-    GLfloat ambientGlobal[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     //    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
     GLfloat positionLight0[] = {100.0f, 100.0f, 100.0f};
@@ -108,7 +107,8 @@ void init() {
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f);
 
-    glEnable(GL_LIGHT0);
+//    glEnable(GL_LIGHT0);
+    glDisable(GL_LIGHT0);
 
     GLfloat positionLight1[] = {100, 10, 30};
     GLfloat ambientLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -123,6 +123,19 @@ void init() {
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 2.0f);
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
+
+    GLfloat ambientSun[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+//    glLightfv(GL_LIGHT0, GL_POSITION, positionLight0);
+    glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
+//    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0);
+//    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
+
+    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, attenuationSun);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, attenuationSun);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, attenuationSun);
+    
+    glDisable(GL_LIGHT2);
+
 
     //    glEnable(GL_LIGHT1);
 
@@ -235,6 +248,8 @@ void timerSun(int value) {
             translatefSun_z += 1;
             translatefSun_y += 2;
             translatefSun_x += 0.5;
+            attenuationSun +=0.2;
+            glEnable(GL_LIGHT2);
         } else {
             inverteSun = 1;
 
@@ -246,11 +261,14 @@ void timerSun(int value) {
             translatefSun_y -= 1;
             translatefSun_z += 1.5;
             translatefSun_x -= 1.1;
+            attenuationSun -= 0.2;
         } else {
             inverteSun = 0;
             translatefSun_x = 20;
             translatefSun_y = -10;
             translatefSun_z = -60;
+            attenuationSun = 0.5;
+            glDisable(GL_LIGHT2);
         }
     }
     glutPostRedisplay();
