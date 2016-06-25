@@ -19,7 +19,8 @@ void drawSwing() {
     alignScene();
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(80, 1, 30);
-    glmDraw(balanco, GLM_COLOR);
+    glmDraw(balanco, GLM_FLAT);
+    //    drawObject(balanco);
     glPopMatrix();
 }
 
@@ -198,7 +199,7 @@ void display() {
 
     drawFloor();
     drawHouse();
-    //    drawSwing();
+    drawSwing();
     drawCar();
     drawPost();
     drawSun();
@@ -358,10 +359,10 @@ void keyboard(int key, int x, int y) {
             cameraZ -= 1;
             break;
         case GLUT_KEY_F8:
-            glDisable(GL_LIGHT1);
+            glDisable(GL_LIGHTING);
             break;
         case GLUT_KEY_F9:
-            glEnable(GL_LIGHT1);
+            glEnable(GL_LIGHTING);
             break;
         case 27:
             exit(0);
@@ -370,10 +371,11 @@ void keyboard(int key, int x, int y) {
 }
 
 int main(int argc, char **argv) {
-    casa = glmReadOBJ("Cyprys_House.obj");
-    //    balanco = glmReadOBJ("");
-    carro = glmReadOBJ("koenigsegg.obj");
-    post = glmReadOBJ("black lamp spotIVI 01.obj");
+    casa = glmReadOBJ("objects/Cyprys_House.obj");
+    balanco = glmReadOBJ("objects/swingcushion.obj");
+    //    balanco = parseObjectFile("objects/swingcushion.obj");
+    post = glmReadOBJ("objects/black lamp spotIVI 01.obj");
+    carro = glmReadOBJ("objects/koenigsegg.obj");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

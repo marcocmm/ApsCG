@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm.h"
+#include "object.h"
 
 GLdouble cameraX = 50;
 GLdouble cameraY = 50;
@@ -23,6 +24,7 @@ GLint isDayLight = 0;
 GLfloat attenuationSun = 0.5;
 
 GLMmodel *casa;
+//Object *balanco;
 GLMmodel *balanco;
 GLMmodel *carro;
 GLMmodel *post;
