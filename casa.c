@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "object.h"
 #include "casa.h"
 
@@ -10,9 +9,14 @@ void rotateAllElements() {
     glRotatef(rotate, 0, 1, 0);
 }
 
+GLfloat getPercentageOfComponent(GLint component) {
+    return component / 255.0;
+}
+
 void drawSwing() {
     glPushMatrix();
     rotateAllElements();
+    glColor3f(getPercentageOfComponent(120), getPercentageOfComponent(68), getPercentageOfComponent(33));
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(80, 1, 30);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
@@ -23,8 +27,9 @@ void drawSwing() {
 void drawFloor() {
     glPushMatrix();
     rotateAllElements();
-    glColor3f(0, 1, 0);
+    glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_QUADS);
+    glColor3f(0, 1, 0);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
     glVertex3f(50, 0, -50);
@@ -36,61 +41,86 @@ void drawFloor() {
 void drawHouse() {
     glPushMatrix();
     rotateAllElements();
+    glColor3f(1.0f, 1.0f, 1.0f);
     glScalef(2.5, 2.5, 2.5);
     glTranslatef(0, -1, -7);
     drawObject(casa);
     glPopMatrix();
 }
 
+void drawPost() {
+    glPushMatrix();
+    rotateAllElements();
+    glColor3f(0.0f, 0.3f, 0.3f);
+    glScalef(0.3, 0.3, 0.3);
+    glTranslatef(100, 0, 30);
+    drawObject(post);
+    glPopMatrix();
+}
+
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
+    glColor3f(3.0f, 0.0f, 0.1f);
     glRotated(90, 0, 1, 0);
+    glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
-    glTranslatef(200, 200, -1000);
+    glTranslatef(translatefCar_x, 200, -1000);
     drawObject(carro);
     glPopMatrix();
 }
 
-void lighting() {
-    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
-    float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, black);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-
-    //ativando luz ambiente global
-    float global_ambient[4] = {0.9f, 0.9f, 0.9f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-
-    //ativa a iluminação
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-}
-
 void init() {
-    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
-    glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
+    glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
-    glEnable(GL_COLOR_MATERIAL);
-
-    glShadeModel(GL_SMOOTH);
-
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
+
+    GLfloat ambientGlobal[4] = {0.0f, 0.6f, 0.5f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
+
+    GLfloat positionLight0[] = {0.0f, 20.0f, 0.0f};
+    GLfloat ambientLight0[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat diffuseLight0[] = {0.0f, 1.0f, 0.0f, 1.0f};
+    GLfloat specularLight0[] = {1.0f, 0.0f, 1.0f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, positionLight0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
+
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.5f);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f);
+
     glEnable(GL_LIGHT0);
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-//    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
-//    glClear(GL_DEPTH_BUFFER_BIT);
-//    glEnable(GL_DEPTH_TEST);
+    GLfloat positionLight1[] = {100, 10, 30};
+    GLfloat ambientLight1[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat diffuseLight1[] = {0.0f, 1.0f, 0.0f, 1.0f};
+    GLfloat specularLight1[] = {1.0f, 0.0f, 1.0f, 1.0f};
+
+    glLightfv(GL_LIGHT1, GL_POSITION, positionLight1);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight1);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight1);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
+
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 2.0f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
+
+    glEnable(GL_LIGHT1);
+
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+////    glClear(GL_DEPTH_BUFFER_BIT);
+////    glEnable(GL_DEPTH_TEST);
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
     //    lighting();
+    glEnable(GL_COLOR_MATERIAL);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void resetScene() {
@@ -134,6 +164,12 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    luz += 0.1;
+    if (luz > 1) {
+        luz = 0;
+    }
+    glClearColor(luz, luz, luz, 1.0f);
+
     gluLookAt(cameraX, cameraY, cameraZ,
             0, 0, 0,
             0, 1, 0);
@@ -142,9 +178,28 @@ void display() {
     drawSwing();
     drawFloor();
     drawCar();
+    drawPost();
 
-    glFlush();
     glutSwapBuffers();
+}
+
+void moveCar(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case 'w':
+            if (translatefCar_x > -1000) {
+                translatefCar_x -= 15;
+            }
+            break;
+
+        case 's':
+            if (translatefCar_x < 200) {
+                translatefCar_x += 15;
+            }
+            break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
 }
 
 void keyboard(int key, int x, int y) {
@@ -155,8 +210,8 @@ void keyboard(int key, int x, int y) {
         cameraX = 5;
         return;
     }
-    if (cameraY < 0) {
-        cameraY = 0;
+    if (cameraY < 5) {
+        cameraY = 5;
         return;
     }
     if (cameraZ < 5) {
@@ -211,11 +266,16 @@ void keyboard(int key, int x, int y) {
         case GLUT_DOWN:
             cameraZ -= 1;
             break;
+        case GLUT_KEY_F8:
+            glDisable(GL_LIGHT1);
+            break;
+        case GLUT_KEY_F9:
+            glEnable(GL_LIGHT1);
+            break;
         case 27:
             exit(0);
     }
     glutPostRedisplay();
-    //    glClear (GL_DEPTH_BUFFER_BIT );
 }
 
 int main(int argc, char **argv) {
@@ -228,17 +288,20 @@ int main(int argc, char **argv) {
     cameraY = 50;
     cameraZ = 50;
     rotate = 0;
+    luz = 0;
 
     atexit(resetScene);
     init();
 
-    casa = parseObjectFile("objetos/bg4_obj.obj");
     balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
+    casa = parseObjectFile("objetos/bg4_obj.obj");
     carro = parseObjectFile("objetos/Bugatti-Veyron.obj");
+    post = parseObjectFile("objetos/post.obj");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
+    glutKeyboardFunc(moveCar);
 
     glutMainLoop();
     /*
