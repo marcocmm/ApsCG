@@ -44,9 +44,9 @@ void drawHouse() {
 void drawCar() {
     glPushMatrix();
     rotateAllElements();
-    glRotated(90, 0, 1, 0);
+    glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
-    glTranslatef(200, 200, -1000);
+    glTranslatef(translatefCar_x, 200, -1000);
     drawObject(carro);
     glPopMatrix();
 }
@@ -71,7 +71,8 @@ void lighting() {
 }
 
 void init() {
-    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};;
+    GLfloat lightpos[] = {5.0f, 10.0f, 0.0f, 1.0f};
+
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_COLOR_MATERIAL);
@@ -83,8 +84,8 @@ void init() {
     glEnable(GL_LIGHT0);
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-        lighting();
-    
+    lighting();
+
 }
 
 void resetScene() {
@@ -133,12 +134,31 @@ void display() {
             0, 1, 0);
 
     drawHouse();
-    drawSwing();
+    //    drawSwing();
     drawFloor();
     drawCar();
 
     glFlush();
     glutSwapBuffers();
+}
+
+void moveCar(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case 'w':
+            if (translatefCar_x > -1000) {
+                translatefCar_x -= 15;
+            }
+            break;
+
+        case 's':
+            if (translatefCar_x < 200) {
+                translatefCar_x += 15;
+            }
+            break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
 }
 
 void keyboard(int key, int x, int y) {
@@ -245,7 +265,7 @@ int main(int argc, char **argv) {
 
     cameraX = 50;
     cameraY = 50;
-    cameraZ = 50;   
+    cameraZ = 50;
     rotate = 0;
 
     atexit(resetScene);
@@ -258,6 +278,7 @@ int main(int argc, char **argv) {
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
+    glutKeyboardFunc(moveCar);
 
     glutMainLoop();
     /*
