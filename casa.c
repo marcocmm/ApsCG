@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "object.h"
 #include "casa.h"
 
@@ -30,6 +29,7 @@ void drawFloor() {
     rotateAllElements();
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_QUADS);
+    glColor3f(0, 1, 0);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
     glVertex3f(50, 0, -50);
@@ -63,21 +63,22 @@ void drawCar() {
     rotateAllElements();
     glColor3f(3.0f, 0.0f, 0.1f);
     glRotated(90, 0, 1, 0);
+    glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
-    glTranslatef(200, 200, -1000);
+    glTranslatef(translatefCar_x, 200, -1000);
     drawObject(carro);
     glPopMatrix();
 }
 
 void init() {
-    glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
+    glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_LIGHTING);
 
     GLfloat ambientGlobal[4] = {0.0f, 0.6f, 0.5f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
-    GLfloat positionLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat positionLight0[] = {0.0f, 20.0f, 0.0f};
     GLfloat ambientLight0[] = {1.0f, 0.0f, 0.0f, 1.0f};
     GLfloat diffuseLight0[] = {0.0f, 1.0f, 0.0f, 1.0f};
     GLfloat specularLight0[] = {1.0f, 0.0f, 1.0f, 1.0f};
@@ -91,7 +92,7 @@ void init() {
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f);
 
-    //    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
 
     GLfloat positionLight1[] = {100, 10, 30};
     GLfloat ambientLight1[] = {1.0f, 0.0f, 0.0f, 1.0f};
@@ -107,7 +108,7 @@ void init() {
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-    //    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT1);
 
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
@@ -172,6 +173,25 @@ void display() {
     drawPost();
 
     glutSwapBuffers();
+}
+
+void moveCar(unsigned char key, int xmouse, int ymouse) {
+    switch (key) {
+        case 'w':
+            if (translatefCar_x > -1000) {
+                translatefCar_x -= 15;
+            }
+            break;
+
+        case 's':
+            if (translatefCar_x < 200) {
+                translatefCar_x += 15;
+            }
+            break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
 }
 
 void keyboard(int key, int x, int y) {
@@ -277,6 +297,7 @@ int main(int argc, char **argv) {
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
+    glutKeyboardFunc(moveCar);
 
     glutMainLoop();
     /*

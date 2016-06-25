@@ -7,3 +7,6 @@ Object* balanco;
 Object* carro;
 Object* post;
 float luz;
+int translatefCar_x = 200;
+int rotateCar_z = 90;
+int y = 1;
