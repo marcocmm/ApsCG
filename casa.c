@@ -4,7 +4,6 @@
 #include <string.h>
 #include "object.h"
 #include "casa.h"
-
 #include "glm.h"
 
 void rotateAllElements() {
@@ -23,14 +22,14 @@ void drawSwing() {
     glTranslatef(80, 1, 30);
     //    glRotatef(45, 1.0f, 0.0f, 0.0f);
     //    drawObject(balanco);
-    glmDraw(balanco, GLM_TEXTURE);
+    glmDraw(balanco, GLM_COLOR);
     glPopMatrix();
 }
 
 void drawFloor() {
     glPushMatrix();
     rotateAllElements();
-    //    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 0.3f, 0.0f);
     glBegin(GL_QUADS);
     glVertex3f(-50, 0, 50);
     glVertex3f(50, 0, 50);
@@ -45,7 +44,7 @@ void drawHouse() {
     rotateAllElements();
     //    glColor3f(1.0f, 1.0f, 1.0f);
     glScalef(2.5, 2.5, 2.5);
-    glTranslatef(0, -1, -7);
+    glTranslatef(0, 0, 0);
     glmDraw(casa, GLM_COLOR);
     //    drawObject(casa);
     glPopMatrix();
@@ -58,7 +57,7 @@ void drawPost() {
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(100, 0, 30);
     //    drawObject(post);
-    glmDraw(post, GLM_TEXTURE);
+    glmDraw(post, GLM_COLOR);
     glPopMatrix();
 }
 
@@ -66,12 +65,12 @@ void drawCar() {
     glPushMatrix();
     rotateAllElements();
     //    glColor3f(3.0f, 0.0f, 0.1f);
-    //        glRotated(0, 0, 1, 0);
+    //    glRotated(0, 0, 1, 0);
     glRotated(rotateCar_z, 0, y, 0);
     glScalef(0.018, 0.018, 0.018);
     glTranslatef(translatefCar_x, 200, -1000);
     //    drawObject(carro);
-    glmDraw(carro, GLM_TEXTURE);
+    glmDraw(carro, GLM_COLOR);
     glPopMatrix();
 }
 
@@ -80,13 +79,13 @@ void init() {
 
     glEnable(GL_LIGHTING);
 
-    GLfloat ambientGlobal[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
+    GLfloat ambientGlobal[4] = {0.6f, 0.6f, 0.6f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientGlobal);
 
-    GLfloat positionLight0[] = {100.0f, 100.0f, 100.0f};
-    GLfloat ambientLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat diffuseLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat specularLight0[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat positionLight0[] = {50.0f, 50.0f, 50.0f};
+    GLfloat ambientLight0[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat diffuseLight0[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat specularLight0[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, positionLight0);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
@@ -100,36 +99,35 @@ void init() {
     glEnable(GL_LIGHT0);
 
     GLfloat positionLight1[] = {100, 10, 30};
-    GLfloat ambientLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat diffuseLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat specularLight1[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat ambientLight1[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat diffuseLight1[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat specularLight1[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
     glLightfv(GL_LIGHT1, GL_POSITION, positionLight1);
     glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight1);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight1);
     glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
 
-    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 2.0f);
-    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.6f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.20f);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
 
-//    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT1);
 
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-////    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
-////    glClear(GL_DEPTH_BUFFER_BIT);
-////    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
-    //    lighting();
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);
 }
 
 void resetScene() {
-    //    resetModel(casa);
-    //    resetModel(balanco);
+    resetModel(NULL);
+    resetModel(NULL);
 }
 
 void reshape(int w, int h) {
@@ -179,30 +177,26 @@ void display() {
             0, 1, 0);
 
     drawHouse();
-    drawSwing();
+//    drawSwing();
     drawFloor();
-    drawCar();
-    //    drawPost();
+//    drawCar();
+//    drawPost();
 
     glutSwapBuffers();
 }
 
 void moveCar(unsigned char key, int xmouse, int ymouse) {
-
     switch (key) {
         case 'w':
             if (translatefCar_x > -1000) {
                 translatefCar_x -= 15;
             }
             break;
-
         case 's':
             if (translatefCar_x < 200) {
                 translatefCar_x += 15;
             }
             break;
-
-
         default:
             break;
     }
@@ -217,7 +211,6 @@ void moveCarLR(unsigned char key, int xmouse, int ymouse) {
         case 'd':
             rotateCar_z += 10;
             break;
-
     }
 }
 
@@ -312,27 +305,21 @@ int main(int argc, char **argv) {
     atexit(resetScene);
     init();
 
-    //    balanco = parseObjectFile("objetos/chair_swing/swingcushion.obj");
-    //    casa = parseObjectFile("objetos/bg4_obj.obj");
-    //    carro = parseObjectFile("objetos/Bugatti-Veyron.obj");
-    //    post = parseObjectFile("objetos/post.obj");
+    Object* balancoObj = parseObjectFile("");
+    Object* casaObj = parseObjectFile("Cyprys_House.obj");
+    Object* carroObj = parseObjectFile("");
+    Object* postObj = parseObjectFile("");
 
-    casa = glmReadOBJ("objetos/bg4_obj.obj");
-    balanco = glmReadOBJ("objetos/chair_swing/swingcushion.obj");
-    carro = glmReadOBJ("objetos/Bugatti-Veyron.obj");
-    //    post = glmReadOBJ("objetos/post.obj");
+    casa = glmReadOBJ("Cyprys_House.obj");
+//    balanco = glmReadOBJ("");
+//    carro = glmReadOBJ("");
+//    post = glmReadOBJ("");
 
     glutReshapeFunc(reshapeSwing);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(moveCar);
-    //    glutKeyboardFunc(moveCarLR);
 
     glutMainLoop();
-    /*
-     * atenuação radial
-     * duas fontes de luz, ambiente e acima do solo
-     * 
-     */
     return 0;
 }
