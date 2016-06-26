@@ -126,44 +126,49 @@ void init() {
 
     glEnable(GL_LIGHTING);
 
-    GLfloat positionLight0[] = {50.0f, 50.0f, 50.0f};
-    GLfloat ambientLight0[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat diffuseLight0[] = {0.7f, 0.7f, 0.7f, 1.0f};
-    GLfloat specularLight0[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    GLfloat positionHouse[] = {0.0f, 0.0f, 0.0f};
+    GLfloat ambientHouse[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat diffuseHouse[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat specularHouse[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
-    glLightfv(GL_LIGHT0, GL_POSITION, positionLight0);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
+    glLightfv(GL_LIGHT0, GL_POSITION, positionHouse);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientHouse);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseHouse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularHouse);
 
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.5f);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f);
 
-    glEnable(GL_LIGHT0);
+    GLfloat positionPost[] = {100, 10, 30};
+    GLfloat ambientPost[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat diffusePost[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat specularPost[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
-    GLfloat positionLight1[] = {100, 10, 30};
-    GLfloat ambientLight1[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat diffuseLight1[] = {0.7f, 0.7f, 0.7f, 1.0f};
-    GLfloat specularLight1[] = {0.4f, 0.4f, 0.4f, 1.0f};
-
-    glLightfv(GL_LIGHT1, GL_POSITION, positionLight1);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight1);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight1);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
+    glLightfv(GL_LIGHT1, GL_POSITION, positionPost);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientPost);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffusePost);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specularPost);
 
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.6f);
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.2f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
 
-    glEnable(GL_LIGHT1);
+//    GLfloat positionSun[] = {100, 10, 30};
+    GLfloat ambientSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    GLfloat diffuseSun[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat specularSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
-    GLfloat ambientSun[4] = {0.4f, 0.4f, 0.4f, 1.0f};
+//    glLightfv(GL_LIGHT2, GL_POSITION, positionSun);
     glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseSun);
+    glLightfv(GL_LIGHT2, GL_SPECULAR, specularSun);
 
-    glEnable(GL_LIGHT2);
+//    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 0.6f);
+//    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.2f);
+//    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.3f);
 
-    GLfloat global_ambient[4] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat global_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
     glEnable(GL_DEPTH_TEST);
@@ -312,54 +317,15 @@ void timerSun(int value) {
     if (rotateSun > 360) {
         rotateSun -= 360;
     }
-    if (rotateSun == 0) {
+    if (rotateSun == 270) {
+        glEnable(GL_LIGHT1);
         glDisable(GL_LIGHT2);
         glDisable(GL_LIGHT_MODEL_AMBIENT);
     } else if (rotateSun == 90) {
+        glDisable(GL_LIGHT1);
         glEnable(GL_LIGHT2);
         glEnable(GL_LIGHT_MODEL_AMBIENT);
     }
-    //    if (translatefSun_y > 100) {
-    //        amanhecendo = 0;
-    //        anoitecendo = 1;
-    //    } else if (translatefSun_y < 0) {
-    //        anoitecendo = 0;
-    //        noite = 1;
-    //    } else if (translatefSun_y < -70) {
-    //        amanhecendo = 1;
-    //        anoitecendo = 0;
-    //    }
-
-    //    if (noite) {
-    //        translatefSun_z += 0.1;
-    //        translatefSun_y += 0.2 * value;
-    //        translatefSun_x += 0.1;
-    //    } else if (amanhecendo) {
-    //        translatefSun_z += 0.1;
-    //        translatefSun_y += 0.1;
-    //        translatefSun_x += 0.1;
-    //    } else if (anoitecendo) {
-    //        translatefSun_z += 0.1;
-    //        translatefSun_y -= 0.1;
-    //        translatefSun_x += 0.1;
-    //    }
-    //            attenuationSun += 0.2;
-    //    if (isDayLight) {
-    //        if (translatefSun_y > -3) {
-    //            translatefSun_y -= 1;
-    //            translatefSun_z += 1.5;
-    //            translatefSun_x -= 1.1;
-    //            attenuationSun -= 0.2;
-    //        } else {
-    //            isDayLight = 0;
-    //            translatefSun_x = 20;
-    //            translatefSun_y = -10;
-    //            translatefSun_z = -60;
-    //            attenuationSun = 0.5;
-    //            glDisable(GL_LIGHT2);
-    //            glDisable(GL_LIGHT_MODEL_AMBIENT);
-    //        }
-    //    }
     glutPostRedisplay();
     glutTimerFunc(10, timerSun, value + 1);
 }
@@ -418,10 +384,10 @@ void keyboard(int key, int x, int y) {
             }
             break;
         case GLUT_KEY_F8:
-            glDisable(GL_LIGHT_MODEL_AMBIENT);
+            glDisable(GL_LIGHTING);
             break;
         case GLUT_KEY_F9:
-            glEnable(GL_LIGHT_MODEL_AMBIENT);
+            glEnable(GL_LIGHTING);
             break;
         case 27:
             exit(0);
