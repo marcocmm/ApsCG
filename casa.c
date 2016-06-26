@@ -299,30 +299,6 @@ void keyboard(int key, int x, int y) {
     if (rotateScene > 360) {
         rotateScene -= 360;
     }
-    if (cameraX < 5) {
-        cameraX = 5;
-        return;
-    }
-    if (cameraY < 5) {
-        cameraY = 5;
-        return;
-    }
-    if (cameraZ < 5) {
-        cameraZ = 5;
-        return;
-    }
-    if (cameraX > 100) {
-        cameraX = 100;
-        return;
-    }
-    if (cameraY > 100) {
-        cameraY = 100;
-        return;
-    }
-    if (cameraZ > 100) {
-        cameraZ = 100;
-        return;
-    }
     switch (key) {
         case GLUT_KEY_LEFT:
             rotateScene += 1;
@@ -331,14 +307,26 @@ void keyboard(int key, int x, int y) {
             rotateScene -= 1;
             break;
         case GLUT_KEY_UP:
-            cameraX -= 1;
-            cameraY -= 1;
-            cameraZ -= 1;
+            if (cameraX > 5) {
+                cameraX -= 1;
+            }
+            if (cameraY > 5) {
+                cameraY -= 1;
+            }
+            if (cameraZ > 5) {
+                cameraZ -= 1;
+            }
             break;
         case GLUT_KEY_DOWN:
-            cameraX += 1;
-            cameraY += 1;
-            cameraZ += 1;
+            if (cameraX < 100) {
+                cameraX += 1;
+            }
+            if (cameraY < 100) {
+                cameraY += 1;
+            }
+            if (cameraZ < 100) {
+                cameraZ += 1;
+            }
             break;
         case GLUT_KEY_HOME:
             cameraX = 10;
@@ -351,19 +339,20 @@ void keyboard(int key, int x, int y) {
             cameraZ = 30;
             break;
         case GLUT_KEY_F1:
-            cameraY -= 1;
+            if (cameraY > 5) {
+                cameraY -= 1;
+            }
             break;
         case GLUT_KEY_F2:
-            cameraY += 1;
-            break;
-        case GLUT_DOWN:
-            cameraZ -= 1;
+            if (cameraY < 100) {
+                cameraY += 1;
+            }
             break;
         case GLUT_KEY_F8:
-            glDisable(GL_LIGHTING);
+            glDisable(GL_LIGHT_MODEL_AMBIENT);
             break;
         case GLUT_KEY_F9:
-            glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHT_MODEL_AMBIENT);
             break;
         case 27:
             exit(0);
@@ -376,7 +365,8 @@ int main(int argc, char **argv) {
     balanco = glmReadOBJ("objects/swingcushion.obj");
     //    balanco = parseObjectFile("objects/swingcushion.obj");
     post = glmReadOBJ("objects/black lamp spotIVI 01.obj");
-    carro = glmReadOBJ("objects/koenigsegg.obj");
+    //    carro = glmReadOBJ("objects/koenigsegg.obj");
+    carro = glmReadOBJ("objects/Forged_fence.obj");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
