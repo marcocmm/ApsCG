@@ -21,7 +21,6 @@ void drawSwing() {
     glScalef(0.3, 0.3, 0.3);
     glTranslatef(80, 1, 30);
     glmDraw(balanco, GLM_FLAT);
-    //    drawObject(balanco);
     glPopMatrix();
 }
 
@@ -68,8 +67,6 @@ void drawPost() {
 void drawCar() {
     glPushMatrix();
     alignScene();
-    //    glRotated(-90, 1, 0, 0);
-    //    glScalef(0.018, 0.018, 0.018);
     glRotated(rotateCar_z, 0, 1, 0);
     glTranslatef(translatefCar_x, 0, 10);
     glmDraw(carro, GLM_COLOR);
@@ -80,8 +77,9 @@ void drawSun() {
     glPushMatrix();
     alignScene();
     glColor3f(getPercentageOfComponent(243), getPercentageOfComponent(159), getPercentageOfComponent(24));
-    glTranslated(translatefSun_x, translatefSun_y, translatefSun_z);
-    glutSolidSphere(10, 40, 40);
+    glRotatef(rotateSun, 1, 0, 1);
+    glTranslatef(-70, -70, -70);
+    glutSolidSphere(20, 40, 40);
     glPopMatrix();
 }
 
@@ -163,10 +161,6 @@ void init() {
     GLfloat ambientSun[4] = {0.4f, 0.4f, 0.4f, 1.0f};
     glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
 
-    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, attenuationSun);
-    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, attenuationSun);
-    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, attenuationSun);
-
     glEnable(GL_LIGHT2);
 
     GLfloat global_ambient[4] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -224,13 +218,13 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    if (isDayLight) {
-        luz += 0.007;
-    } else {
-        luz -= 0.007;
-    }
-
-    glClearColor(0, luz, luz, 1.0f);
+    //    if (isDayLight) {
+    //        luz += 0.007;
+    //    } else {
+    //        luz -= 0.007;
+    //    }
+    //
+    //    glClearColor(0, luz, luz, 1.0f);
 
     gluLookAt(cameraX, cameraY, cameraZ,
             focoX, focoY, focoZ,
@@ -239,10 +233,10 @@ void display() {
     drawFloor();
     drawHouse();
     drawSwing();
-    drawCar();
+    //    drawCar();
     drawPost();
     drawSun();
-    drawFence();
+    //    drawFence();
     glutSwapBuffers();
 }
 
@@ -311,36 +305,63 @@ void keyboardLetras(unsigned char key, int xmouse, int ymouse) {
 }
 
 void timerSun(int value) {
-    if (!isDayLight) {
-        if (translatefSun_y <= 70) {
-            translatefSun_z += 1;
-            translatefSun_y += 2;
-            translatefSun_x += 0.5;
-            attenuationSun += 0.2;
-            glEnable(GL_LIGHT2);
-            glEnable(GL_LIGHT_MODEL_AMBIENT);
-        } else {
-            isDayLight = 1;
-        }
+    //    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, attenuationSun);
+    //    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, attenuationSun);
+    //    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, attenuationSun);
+    rotateSun += 1;
+    if (rotateSun > 360) {
+        rotateSun -= 360;
     }
-    if (isDayLight) {
-        if (translatefSun_y > -3) {
-            translatefSun_y -= 1;
-            translatefSun_z += 1.5;
-            translatefSun_x -= 1.1;
-            attenuationSun -= 0.2;
-        } else {
-            isDayLight = 0;
-            translatefSun_x = 20;
-            translatefSun_y = -10;
-            translatefSun_z = -60;
-            attenuationSun = 0.5;
-            glDisable(GL_LIGHT2);
-            glDisable(GL_LIGHT_MODEL_AMBIENT);
-        }
+    if (rotateSun == 0) {
+        glDisable(GL_LIGHT2);
+        glDisable(GL_LIGHT_MODEL_AMBIENT);
+    } else if (rotateSun == 90) {
+        glEnable(GL_LIGHT2);
+        glEnable(GL_LIGHT_MODEL_AMBIENT);
     }
+    //    if (translatefSun_y > 100) {
+    //        amanhecendo = 0;
+    //        anoitecendo = 1;
+    //    } else if (translatefSun_y < 0) {
+    //        anoitecendo = 0;
+    //        noite = 1;
+    //    } else if (translatefSun_y < -70) {
+    //        amanhecendo = 1;
+    //        anoitecendo = 0;
+    //    }
+
+    //    if (noite) {
+    //        translatefSun_z += 0.1;
+    //        translatefSun_y += 0.2 * value;
+    //        translatefSun_x += 0.1;
+    //    } else if (amanhecendo) {
+    //        translatefSun_z += 0.1;
+    //        translatefSun_y += 0.1;
+    //        translatefSun_x += 0.1;
+    //    } else if (anoitecendo) {
+    //        translatefSun_z += 0.1;
+    //        translatefSun_y -= 0.1;
+    //        translatefSun_x += 0.1;
+    //    }
+    //            attenuationSun += 0.2;
+    //    if (isDayLight) {
+    //        if (translatefSun_y > -3) {
+    //            translatefSun_y -= 1;
+    //            translatefSun_z += 1.5;
+    //            translatefSun_x -= 1.1;
+    //            attenuationSun -= 0.2;
+    //        } else {
+    //            isDayLight = 0;
+    //            translatefSun_x = 20;
+    //            translatefSun_y = -10;
+    //            translatefSun_z = -60;
+    //            attenuationSun = 0.5;
+    //            glDisable(GL_LIGHT2);
+    //            glDisable(GL_LIGHT_MODEL_AMBIENT);
+    //        }
+    //    }
     glutPostRedisplay();
-    glutTimerFunc(60, timerSun, 1);
+    glutTimerFunc(10, timerSun, value + 1);
 }
 
 void keyboard(int key, int x, int y) {
@@ -427,7 +448,7 @@ int main(int argc, char **argv) {
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
     glutKeyboardFunc(keyboardLetras);
-    glutTimerFunc(60, timerSun, 1);
+    glutTimerFunc(10, timerSun, 1);
 
     glutMainLoop();
     return 0;

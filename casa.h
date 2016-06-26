@@ -11,17 +11,18 @@ GLdouble focoY = 0;
 GLdouble focoZ = 0;
 
 GLint rotateScene = 0;
-GLfloat luz = 0;
 
 GLint translatefCar_x = 0;
 GLint rotateCar_z = 0;
-GLint y = 1;
 
-GLint translatefSun_x = 20;
-GLint translatefSun_y = -10;
-GLint translatefSun_z = -60;
-GLint isDayLight = 0;
-GLfloat attenuationSun = 0.5;
+GLint amanhecendo = 1;
+GLint anoitecendo = 0;
+GLint noite = 0;
+GLint isDayLight = 1;
+
+GLfloat rotateSun = 10;
+//GLfloat attenuationSun = 0.5;
+//GLfloat corCeu = 0;
 
 GLMmodel *casa;
 GLMmodel *balanco;
