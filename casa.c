@@ -85,6 +85,44 @@ void drawSun() {
     glPopMatrix();
 }
 
+void drawFence() {
+    int i;
+    for (i = -4; i < 6; i += 3) {
+        glPushMatrix();
+        alignScene();
+        glScalef(10, 10, 10);
+        glTranslatef(i, 0, 5);
+        glmDraw(fence, GLM_COLOR);
+        glPopMatrix();
+    }
+    for (i = -4; i < 6; i += 3) {
+        glPushMatrix();
+        alignScene();
+        glScalef(10, 10, 10);
+        glTranslatef(i, 0, -5);
+        glmDraw(fence, GLM_COLOR);
+        glPopMatrix();
+    }
+    for (i = -5; i < 6; i += 3) {
+        glPushMatrix();
+        alignScene();
+        glScalef(10, 10, 10);
+        glTranslatef(5, 0, i);
+        glRotatef(90, 0, 1, 0);
+        glmDraw(fence, GLM_COLOR);
+        glPopMatrix();
+    }
+    for (i = -5; i < 6; i += 3) {
+        glPushMatrix();
+        alignScene();
+        glScalef(10, 10, 10);
+        glTranslatef(-5, 0, i);
+        glRotatef(90, 0, 1, 0);
+        glmDraw(fence, GLM_COLOR);
+        glPopMatrix();
+    }
+}
+
 void init() {
     glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
@@ -204,6 +242,7 @@ void display() {
     drawCar();
     drawPost();
     drawSun();
+    drawFence();
     glutSwapBuffers();
 }
 
@@ -239,20 +278,29 @@ void moveCarLR(unsigned char key, int xmouse, int ymouse) {
 void moveFocoCamera(unsigned char key, int xmouse, int ymouse) {
     switch (key) {
         case '6':
-            focoX += 1;
+            if (focoX < 50) {
+                focoX += 1;
+            }
             break;
         case '4':
-            focoX -= 1;
+            if (focoX > -50) {
+                focoX -= 1;
+            }
             break;
         case '2':
-            focoZ += 1;
+            if (focoZ < 50) {
+                focoZ += 1;
+            }
             break;
         case '8':
-            focoZ -= 1;
+            if (focoZ > -50) {
+                focoZ -= 1;
+            }
             break;
         case '5':
             focoX = 0;
             focoZ = 0;
+            break;
     }
 }
 
@@ -363,10 +411,9 @@ void keyboard(int key, int x, int y) {
 int main(int argc, char **argv) {
     casa = glmReadOBJ("objects/Cyprys_House.obj");
     balanco = glmReadOBJ("objects/swingcushion.obj");
-    //    balanco = parseObjectFile("objects/swingcushion.obj");
     post = glmReadOBJ("objects/black lamp spotIVI 01.obj");
-    //    carro = glmReadOBJ("objects/koenigsegg.obj");
-    carro = glmReadOBJ("objects/Forged_fence.obj");
+    carro = glmReadOBJ("objects/koenigsegg.obj");
+    fence = glmReadOBJ("objects/Forged_fence.obj");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
