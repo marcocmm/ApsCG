@@ -38,6 +38,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/casa.o \
 	${OBJECTDIR}/glm.o \
 	${OBJECTDIR}/glm_util.o \
+	${OBJECTDIR}/glmimg.o \
+	${OBJECTDIR}/glmimg_jpg.o \
+	${OBJECTDIR}/glmimg_png.o \
 	${OBJECTDIR}/object.o
 
 
@@ -79,6 +82,21 @@ ${OBJECTDIR}/glm_util.o: glm_util.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glm_util.o glm_util.c
+
+${OBJECTDIR}/glmimg.o: glmimg.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glmimg.o glmimg.c
+
+${OBJECTDIR}/glmimg_jpg.o: glmimg_jpg.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glmimg_jpg.o glmimg_jpg.c
+
+${OBJECTDIR}/glmimg_png.o: glmimg_png.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glmimg_png.o glmimg_png.c
 
 ${OBJECTDIR}/object.o: object.c 
 	${MKDIR} -p ${OBJECTDIR}

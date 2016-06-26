@@ -19,6 +19,9 @@
       <itemPath>casa.c</itemPath>
       <itemPath>glm.c</itemPath>
       <itemPath>glm_util.c</itemPath>
+      <itemPath>glmimg.c</itemPath>
+      <itemPath>glmimg_jpg.c</itemPath>
+      <itemPath>glmimg_png.c</itemPath>
       <itemPath>object.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -59,6 +62,12 @@
       </item>
       <item path="glm_util.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="glmimg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmimg_jpg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmimg_png.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="glmint.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="object.c" ex="false" tool="0" flavor2="0">
@@ -96,6 +105,12 @@
       <item path="glm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="glm_util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmimg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmimg_jpg.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="glmimg_png.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="glmint.h" ex="false" tool="3" flavor2="0">
       </item>

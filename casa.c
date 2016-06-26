@@ -5,6 +5,7 @@
 #include "object.h"
 #include "casa.h"
 #include "glm.h"
+#include "glmint.h"
 
 void alignScene() {
     glRotatef(rotateScene, 0, 1, 0);
