@@ -67,8 +67,8 @@ void drawPost() {
 void drawCar() {
     glPushMatrix();
     alignScene();
+    glTranslatef(-translatefCar_x, 0.25, 0);
     glRotated(rotateCar_z, 0, 1, 0);
-    glTranslatef(translatefCar_x, 0, 10);
     glmDraw(carro, GLM_COLOR);
     glPopMatrix();
 }
@@ -245,13 +245,13 @@ void display() {
 void moveCar(unsigned char key, int xmouse, int ymouse) {
     switch (key) {
         case 'w':
-            if (translatefCar_x > -1000) {
-                translatefCar_x -= 15;
+            if (translatefCar_x > -45) {
+                translatefCar_x -= 1;
             }
             break;
         case 's':
-            if (translatefCar_x < 200) {
-                translatefCar_x += 15;
+            if (translatefCar_x < 45) {
+                translatefCar_x += 1;
             }
             break;
         default:
@@ -263,10 +263,10 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
 void moveCarLR(unsigned char key, int xmouse, int ymouse) {
     switch (key) {
         case 'a':
-            rotateCar_z -= 10;
+            rotateCar_z -= 1;
             break;
         case 'd':
-            rotateCar_z += 10;
+            rotateCar_z += 1;
             break;
     }
 }
