@@ -127,9 +127,9 @@ void init() {
     glEnable(GL_LIGHTING);
 
     GLfloat positionHouse[] = {0.0f, 0.0f, 0.0f};
-    GLfloat ambientHouse[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat diffuseHouse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-    GLfloat specularHouse[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    GLfloat ambientHouse[] = {0.2f, 0.2f, 0.2f, 0.2f};
+    GLfloat diffuseHouse[] = {0.1f, 0.1f, 0.1f, 0.1f};
+    GLfloat specularHouse[] = {0.4f, 0.4f, 0.4f, 0.4f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, positionHouse);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientHouse);
@@ -140,7 +140,7 @@ void init() {
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f);
 
-    GLfloat positionPost[] = {100, 10, 30};
+    GLfloat positionPost[] = {10, 10, 30};
     GLfloat ambientPost[] = {0.2f, 0.2f, 0.2f, 1.0f};
     GLfloat diffusePost[] = {0.7f, 0.7f, 0.7f, 1.0f};
     GLfloat specularPost[] = {0.4f, 0.4f, 0.4f, 1.0f};
@@ -154,21 +154,19 @@ void init() {
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.2f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
 
-//    GLfloat positionSun[] = {100, 10, 30};
-    GLfloat ambientSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
-    GLfloat diffuseSun[] = {0.7f, 0.7f, 0.7f, 1.0f};
-    GLfloat specularSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    //    GLfloat positionSun[] = {100, 10, 30};
+    //    GLfloat ambientSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    //    GLfloat diffuseSun[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    //    GLfloat specularSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
 
-//    glLightfv(GL_LIGHT2, GL_POSITION, positionSun);
-    glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
-    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseSun);
-    glLightfv(GL_LIGHT2, GL_SPECULAR, specularSun);
+    //    glLightfv(GL_LIGHT2, GL_POSITION, positionSun);
+    //    glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
+    //    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseSun);
+    //    glLightfv(GL_LIGHT2, GL_SPECULAR, specularSun);
 
-//    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 0.6f);
-//    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.2f);
-//    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.3f);
+    //    glEnable(GL_LIGHT2);
 
-    GLfloat global_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat global_ambient[] = {0.4f, 0.4f, 0.4f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
     glEnable(GL_DEPTH_TEST);
@@ -318,13 +316,15 @@ void timerSun(int value) {
         rotateSun -= 360;
     }
     if (rotateSun == 270) {
-        glEnable(GL_LIGHT1);
-        glDisable(GL_LIGHT2);
-        glDisable(GL_LIGHT_MODEL_AMBIENT);
-    } else if (rotateSun == 90) {
-        glDisable(GL_LIGHT1);
-        glEnable(GL_LIGHT2);
-        glEnable(GL_LIGHT_MODEL_AMBIENT);
+        glDisable(GL_LIGHT0);
+        //        glDisable(GL_LIGHT1);
+        //        glDisable(GL_LIGHT2);
+        //        glEnable(GL_LIGHT_MODEL_AMBIENT);
+    } else if (rotateSun == 80) {
+        glEnable(GL_LIGHT0);
+        //        glEnable(GL_LIGHT1);
+        //        glEnable(GL_LIGHT2);
+        //        glDisable(GL_LIGHT_MODEL_AMBIENT);
     }
     glutPostRedisplay();
     glutTimerFunc(10, timerSun, value + 1);
@@ -384,10 +384,10 @@ void keyboard(int key, int x, int y) {
             }
             break;
         case GLUT_KEY_F8:
-            glDisable(GL_LIGHTING);
+            glDisable(GL_LIGHT_MODEL_AMBIENT);
             break;
         case GLUT_KEY_F9:
-            glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHT_MODEL_AMBIENT);
             break;
         case 27:
             exit(0);
