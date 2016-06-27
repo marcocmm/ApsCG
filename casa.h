@@ -21,7 +21,6 @@ GLint noite = 0;
 GLint isDayLight = 1;
 
 GLfloat rotateSun = 10;
-//GLfloat attenuationSun = 0.5;
 //GLfloat corCeu = 0;
 
 GLMmodel *casa;
