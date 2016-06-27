@@ -15,13 +15,10 @@ GLint rotateScene = 0;
 GLint translatefCar_x = 0;
 GLint rotateCar_z = 0;
 
-GLint amanhecendo = 1;
-GLint anoitecendo = 0;
-GLint noite = 0;
-GLint isDayLight = 1;
-
 GLfloat rotateSun = 10;
-//GLfloat corCeu = 0;
+GLfloat corCeu = 0;
+
+GLint isDayLight;
 
 GLMmodel *casa;
 GLMmodel *balanco;

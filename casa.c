@@ -122,7 +122,7 @@ void drawFence() {
 }
 
 void init() {
-    glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
+    //    glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
 
     glEnable(GL_LIGHTING);
 
@@ -221,13 +221,12 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    //    if (isDayLight) {
-    //        luz += 0.007;
-    //    } else {
-    //        luz -= 0.007;
-    //    }
-    //
-    //    glClearColor(0, luz, luz, 1.0f);
+    if (isDayLight) {
+        corCeu += 0.0009;
+    } else {
+        corCeu -= 0.0009;
+    }
+    glClearColor(0.2f + corCeu, 0.30980392156f + corCeu, 0.41960784313f + corCeu, 1.0f);
 
     gluLookAt(cameraX, cameraY, cameraZ,
             focoX, focoY, focoZ,
@@ -236,10 +235,10 @@ void display() {
     drawFloor();
     drawHouse();
     drawSwing();
-    //    drawCar();
+    drawCar();
     drawPost();
     drawSun();
-    //    drawFence();
+    drawFence();
     glutSwapBuffers();
 }
 
@@ -313,11 +312,13 @@ void timerSun(int value) {
         rotateSun -= 360;
     }
     if (rotateSun == 270) {
+        isDayLight = 0;
         glEnable(GL_LIGHT0);
         glEnable(GL_LIGHT1);
         glDisable(GL_LIGHT2);
         glDisable(GL_LIGHT_MODEL_AMBIENT);
     } else if (rotateSun == 80) {
+        isDayLight = 1;
         glDisable(GL_LIGHT0);
         glDisable(GL_LIGHT1);
         glEnable(GL_LIGHT2);
