@@ -37,12 +37,13 @@ void drawFloor() {
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     glColor3f(0.0f, 0.3f, 0.0f);
 
-    glBegin(GL_QUADS);
-    glVertex3f(-50, 0, 50);
-    glVertex3f(50, 0, 50);
-    glVertex3f(50, 0, -50);
-    glVertex3f(-50, 0, -50);
+    glBegin(GL_POLYGON);
+    glVertex3f(-500, 0, 500);
+    glVertex3f(500, 0, 500);
+    glVertex3f(500, 0, -500);
+    glVertex3f(-500, 0, -500);
     glEnd();
+
     glPopMatrix();
 }
 
@@ -67,8 +68,8 @@ void drawPost() {
 void drawCar() {
     glPushMatrix();
     alignScene();
-    glTranslatef(-translatefCar_x, 0.25, 0);
-    glRotated(rotateCar_z, 0, 1, 0);
+    glRotatef(rotateCar, 0, 1, 0);
+    glTranslatef(translatefCar_x, 0, 0);
     glmDraw(carro, GLM_COLOR);
     glPopMatrix();
 }
@@ -89,7 +90,16 @@ void drawFence() {
         glPushMatrix();
         alignScene();
         glScalef(10, 10, 10);
-        glTranslatef(i, 0, 5);
+        glTranslatef(i, 0, 6);
+        glmDraw(fence, GLM_COLOR);
+        glPopMatrix();
+    }
+    for (i = -5; i < 6; i += 3) {
+        glPushMatrix();
+        alignScene();
+        glScalef(10, 10, 10);
+        glTranslatef(-6, 0, i);
+        glRotatef(90, 0, 1, 0);
         glmDraw(fence, GLM_COLOR);
         glPopMatrix();
     }
@@ -97,7 +107,7 @@ void drawFence() {
         glPushMatrix();
         alignScene();
         glScalef(10, 10, 10);
-        glTranslatef(i, 0, -5);
+        glTranslatef(i, 0, -7);
         glmDraw(fence, GLM_COLOR);
         glPopMatrix();
     }
@@ -105,16 +115,7 @@ void drawFence() {
         glPushMatrix();
         alignScene();
         glScalef(10, 10, 10);
-        glTranslatef(5, 0, i);
-        glRotatef(90, 0, 1, 0);
-        glmDraw(fence, GLM_COLOR);
-        glPopMatrix();
-    }
-    for (i = -5; i < 6; i += 3) {
-        glPushMatrix();
-        alignScene();
-        glScalef(10, 10, 10);
-        glTranslatef(-5, 0, i);
+        glTranslatef(7, 0, i);
         glRotatef(90, 0, 1, 0);
         glmDraw(fence, GLM_COLOR);
         glPopMatrix();
@@ -122,8 +123,6 @@ void drawFence() {
 }
 
 void init() {
-    //    glClearColor(0.6f, 0.70980392156f, 0.81960784313f, 0.0f);
-
     glEnable(GL_LIGHTING);
 
     GLfloat positionHouse[] = {0, 20, 0};
@@ -155,18 +154,18 @@ void init() {
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 1.3f);
 
     GLfloat positionSun[] = {0, 30, 0};
-    GLfloat ambientSun[] = {0.4f, 0.4f, 0.4f, 1.0f};
-    GLfloat diffuseSun[] = {0.6f, 0.6f, 0.6f, 1.0f};
-    GLfloat specularSun[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    GLfloat ambientSun[] = {0.9f, 0.9f, 0.9f, 1.0f};
+    GLfloat diffuseSun[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    GLfloat specularSun[] = {0.8f, 0.8f, 0.8f, 1.0f};
 
     glLightfv(GL_LIGHT2, GL_POSITION, positionSun);
     glLightfv(GL_LIGHT2, GL_AMBIENT, ambientSun);
     glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseSun);
     glLightfv(GL_LIGHT2, GL_SPECULAR, specularSun);
 
-    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 1.2f);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.4f);
 
-    GLfloat global_ambient[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    GLfloat global_ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
     glEnable(GL_DEPTH_TEST);
@@ -263,10 +262,16 @@ void moveCar(unsigned char key, int xmouse, int ymouse) {
 void moveCarLR(unsigned char key, int xmouse, int ymouse) {
     switch (key) {
         case 'a':
-            rotateCar_z -= 1;
+            rotateCar += 1;
+            if (translatefCar_x > -45) {
+                translatefCar_x -= 0.3;
+            }
             break;
         case 'd':
-            rotateCar_z += 1;
+            rotateCar -= 1;
+            if (translatefCar_x > -45) {
+                translatefCar_x -= 0.3;
+            }
             break;
     }
 }

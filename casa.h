@@ -12,8 +12,8 @@ GLdouble focoZ = 0;
 
 GLint rotateScene = 0;
 
-GLint translatefCar_x = 0;
-GLint rotateCar_z = 0;
+GLfloat translatefCar_x = -10;
+GLfloat rotateCar = 0;
 
 GLfloat rotateSun = 10;
 GLfloat corCeu = 0;
